@@ -1,0 +1,88 @@
+{
+    "speed": 14,
+    "down": 3,
+    "jumps": 4,
+    "idle": {
+        "directionable": true
+    },
+    "attack-left": {
+        "in": 1000,
+        "damage": {
+            "at": 500,
+            "pos": {"x":-60, "y":0},
+            "hitbox": "p 0 0 -100 -100 -150 0 -100 100",
+            "value": 5,
+            "kb": 10
+        }
+    },
+    "attack-right": {
+        "in": 1000,
+        "damage": {
+            "at": 500,
+            "pos": {"x":60, "y":0},
+            "hitbox": "p 0 0 100 100 150 0 100 -100",
+            "value": 5,
+            "kb": 10
+        }
+    },
+    "attack-up": {
+        "in": 1000,
+        "damage": {
+            "at": 500,
+            "pos": {"x":0, "y":-60},
+            "hitbox": "p 0 0 100 -100 0 -150 -100 -100",
+            "value": 5,
+            "kb": 10
+        }
+    },
+    "attack-down": {
+        "in": 1000,
+        "damage": {
+            "at": 500,
+            "pos": {"x":0, "y":60},
+            "hitbox": "p 0 0 -100 100 0 150 100 100",
+            "value": 5,
+            "kb": 10
+        }
+    },
+    "special-left": {
+        "in": 500,
+        "move": {"x":2, "y":0},
+        "block-move":true
+    },
+    "special-right": {
+        "in": 500,
+        "move": {"x":-2, "y":0},
+        "block-move":true
+    },
+    "special-up": {
+        "in": 500,
+        "directionable":true
+    },
+    "special-up-right": {
+        "in": 500,
+        "move": {"x":0, "y":-25}
+    },
+    "special-up-left": {
+        "in": 500,
+        "move": {"x":0, "y":-25}
+    },
+    "special-down": {
+        "in": 1500,
+        "directionable":true
+    },
+    "special-down-right": {
+        "in": 1500,
+        "block-move":true,
+        "block-jump":true
+    },
+    "special-down-left": {
+        "in": 1500,
+        "block-move":true,
+        "block-jump":true
+    },
+    "jump": {
+        "value": 150,
+        "in": 600
+    }
+}

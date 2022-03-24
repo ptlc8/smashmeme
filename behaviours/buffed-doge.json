@@ -1,0 +1,72 @@
+{
+    "speed": 10,
+    "down": 3,
+    "jumps": 2,
+    "idle": {
+        "directionable": true
+    },
+    "attack-left": {
+        "in": 2000
+    },
+    "attack-right": {
+        "in": 2000
+    },
+    "attack-up": {
+        "in": 2000
+    },
+    "attack-down": {
+        "in": 2000
+    },
+    "special-left": {
+        "in": 2000,
+        "thrOw": {
+            "at": 1333,
+            "in": 667,
+            "model": "doge-chems",
+            "behaviours": "doge-chems",
+            "move": {"x":-20,"y":0},
+            "weight": 0,
+            "pos": {"x":0, "y":-110}
+        }
+    },
+    "special-right": {
+        "in": 2000,
+        "thrOw": {
+            "at": 1333,
+            "in": 667,
+            "model": "doge-chems",
+            "behaviours": "doge-chems",
+            "move": {"x":20,"y":0},
+            "weight": 0,
+            "pos": {"x":0, "y":-110}
+        }
+    },
+    "special-up": {
+        "in": 2000,
+        "directionable": true
+    },
+    "special-up-right": {
+        "in": 2000,
+        "move": {"x": 0, "y":-25},
+        "block-jump": true
+    },
+    "special-up-left": {
+        "in": 2000,
+        "move": {"x": 0, "y":-25},
+        "block-jump": true
+    },
+    "special-down": {
+        "in": 3000,
+        "directionable": true
+    },
+    "special-down-right": {
+        "in": 3000
+    },
+    "special-down-left": {
+        "in": 3000
+    },
+    "jump": {
+        "value": 200,
+        "in": 800
+    }
+}

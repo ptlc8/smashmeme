@@ -1,0 +1,37 @@
+{
+    "speed": 12,
+    "down": 3,
+    "jumps": 2,
+    "attack-left": {
+        "in": 800
+    },
+    "attack-right": {
+        "in": 800
+    },
+    "attack-up": {
+        "in": 800
+    },
+    "attack-down": {
+        "in": 800
+    },
+    "special-left": {
+        "in": 1000,
+        "block-move":true,
+        "block-jump":true
+    },
+    "special-right": {
+        "in": 1000,
+        "block-move":true,
+        "block-jump":true
+    },
+    "special-up": {
+        "in": 0
+    },
+    "special-down": {
+        "in": 0
+    },
+    "jump": {
+        "value": 300,
+        "in": 800
+    }
+}

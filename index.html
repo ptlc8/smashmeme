@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Super Smash Meme</title>
+        <style>
+@font-face {
+    font-family: "Elected Office";
+    src: url("/elected-office.regular.ttf");
+}
+body {
+    background-color: #110011;
+    background-color: #36393f;
+    font-family: Arial;
+    color: whitesmoke;
+    font-size: 1.5vw;
+}
+.title, .subtitle {
+    font-family: Elected Office, Arial;
+}
+.minus {
+    font-size: .2em;
+}
+body > .title {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 5em;
+}
+body > .subtitle {
+    display: block;
+    font-size: 2em;
+    text-align: center;
+}
+.article {
+    margin: .5em;
+    padding: .5em;
+    clear: both;
+    /*font-size: 16px;*/
+}
+@media (orientation: landscape) {
+    .article {
+        width: calc(50% - 2.2em);
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+.article .title {
+    font-size: 3em;
+    margin: 16px 8px;
+}
+.article .content {
+    text-align: justify;
+    /*font-size: 1.2em;*/
+    margin: .5em;
+}
+.article .content::first-letter {
+    margin: 0 0 0 24px;
+}
+.article img {
+    width: 50%;
+    padding: 0 .5em;
+}
+.article:nth-child(2n+1) img {
+    float: left;
+}
+.article:nth-child(2n) img {
+    float: right;
+}
+.bottum {
+    background-color: #401040;
+    background-color: #202225;
+    text-align: center;
+    padding: .5em;
+    clear: both;
+}
+        </style>
+    </head>
+    <body>
+        <span class="title">
+            Super Smash Meme
+            <span class="minus">
+                Ultimeme
+            </span>
+        </span>
+        <span class="subtitle">(Work in progress)</span>
+        <hr />
+        <div class="article">
+            <p class="title">Dogum pilum diligum</p>
+            <p class="content">
+                <img src="images/doggos.jpg" />
+                Lorem ipsum tamaloum tribunoum de ti boulum. Badadum tricum airlines, zarbidou sapilou pyrus ed papirus. Dalamum elmorus conel dogibus.</p>
+        </div>
+        <div class="article">
+            <p class="title">Pilum pilum livrum</p>
+            <p class="content">
+                <img src="images/lil-glob.jpg" />
+                Lorem ipsum larvalum delivrum aminun. Partisum claxenum findus e globidus. Livrum crayum destitum.
+            </p>
+        </div>
+        <div class="article">
+            <p class="title">Bongum catus</p>
+            <p class="content">
+                <img src="images/nyan-bongo-cat.jpg" />
+                Lorem ipsum mucus tulus da trompetem. Barnus alcul trocul, e bumbum.
+            </p>
+        </div>
+        <div class="article">
+            <p class="title">Ein reich, ein raptor</p>
+            <p class="content">
+                <img src="images/raptor-jesus.jpg" />
+                Lorem ipsum rapsum armatom, ameno raptum. Dominum nuaga e opilum de cielum doulourum pisem.
+            </p>
+        </div>
+        <div class="article">
+            <p class="title">Ugandum routum na</p>
+            <p class="content">
+                <img src="images/ugandan-knuckle.jpg" />
+                Lorem ipsum herisum foundem de routum. Balibum armitumplum balneus partizoom en islum sanicum bilum bilum.
+            </p>
+        </div>
+        <div class="article">
+            <p class="title">Paranum fachum pepepum</p>
+            <p class="content">
+                <img src="images/pepe-glasses.jpg" />
+                Lorem ipsum dadaum pepeum frogus. Specimenus pervertus na. Helionum patronum palalum de ledum, folum sed lex.
+            </p>
+        </div>
+        <!--<hr style="clear: both;" />-->
+        <div class="bottum">Frick - all rights reserved - July 2020</div>
+    </body>
+</html>

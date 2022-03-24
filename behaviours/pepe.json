@@ -1,0 +1,33 @@
+{
+    "speed": 18,
+    "jumps": 2,
+    "down": 5,
+    "attack-left": {
+        "in": 5000
+    },
+    "attack-right": {
+        "in": 5000
+    },
+    "attack-up": {
+        "in": 1000
+    },
+    "attack-down": {
+        "in": 1000
+    },
+    "special-left": {
+        "in": 1000
+    },
+    "special-right": {
+        "in": 1000
+    },
+    "special-up": {
+        "in": 1000
+    },
+    "special-down": {
+        "in": 1000
+    },
+    "jump": {
+        "value": 180,
+        "in": 0
+    }
+}

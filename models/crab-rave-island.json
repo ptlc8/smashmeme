@@ -1,0 +1,1 @@
+{"img":"crab-rave-island.png","origin":{"x":0.5,"y":0.5},"pos":{"x":0,"y":0},"rot":0,"scale":{"x":0.5,"y":0.5},"anims":{"default":[{"on":"scaleX","steps":[0.98,1.02,0.98],"in":10000,"func":"easeInOutQuad"},{"on":"scaleY","steps":[0.98,1.02,0.98],"in":10000,"func":"easeInOutQuad"}]},"pinneds":[]}
