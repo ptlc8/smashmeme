@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Création d'animations</title>
-		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="create.css" />
 		<script src="easing.js"></script>
 		<script src="models.js?6"></script>
 	</head>
