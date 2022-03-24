@@ -1,6 +1,8 @@
 var background;
 var model;
 var zoom = 1;
+var x = 0;
+var y = 0;
 
 window.addEventListener("load", async () => {
 	var cvs = document.getElementById("preview");
@@ -8,6 +10,14 @@ window.addEventListener("load", async () => {
 	cvs.addEventListener("wheel", (e) => {
 	    e.preventDefault();
 	    zoom *= Math.pow(2, -e.deltaY*0.001);
+	});
+	cvs.addEventListener("mousemove", function(e) {
+		if (e.buttons%2==1) {
+			e.target.style.cursor = "grabbing";
+			x += e.movementX;
+			y += e.movementY;
+		} else
+			e.target.style.cursor = "grab";
 	});
 	background = newModel({
 		img: "grid.png"
@@ -25,12 +35,12 @@ window.addEventListener("load", async () => {
 		if (ctx.resetTransform) ctx.resetTransform();
 		ctx.globalAlpha = 1;
 		ctx.clearRect(0, 0, cvs.width, cvs.height);
-		ctx.translate(300, 400);
+		ctx.translate(300+x, 400+y);
 		ctx.scale(zoom, zoom);
 		renderModel(ctx, background, Date.now()-startT, "default");
 		renderModel(ctx, model, Date.now()-startT, animSelect.value);
 		ctx.scale(1/zoom, 1/zoom);
-		ctx.translate(-300, -400);
+		ctx.translate(-300-x, -400-y);
 	}, 1000/30);
 });
 
@@ -313,4 +323,35 @@ function query(text) {
 		input.focus();
 	});
 	return promise;
+}
+
+function convertToGif(duration, delay, quality) {
+	if (duration===undefined)
+		duration = parseInt(prompt("Quelle durée du gif en ms ?"));
+	if (delay===undefined)
+		delay = parseInt(prompt("Quelle durée entre deux images em ms ?"));
+	if (quality===undefined)
+		quality = parseInt(prompt("Quelle qualité ? (4 : bonne, 10 : correct, 20 : légère)"));
+	var gif = new GIF({
+		quality: quality
+	});
+	var animName = document.getElementById("anim-select").value;
+	console.log("[GIF] Création des images");
+	for (var i = 0; i < duration; i+=delay) {
+		var cvs = document.createElement("canvas");
+		cvs.width = cvs.height = 600;
+		var ctx = cvs.getContext("2d");
+		ctx.translate(300+x, 400+y);
+		ctx.scale(zoom, zoom);
+		renderModel(ctx, model, i, animName);
+		ctx.scale(1/zoom, 1/zoom);
+		ctx.translate(-300+x, -400+y);
+		gif.addFrame(cvs, {delay:delay});
+	}
+	gif.on("finished", function(blob) {
+		window.open(URL.createObjectURL(blob));
+		console.log("[GIF] Gif créé");
+	});
+	console.log("[GIF] Conversion en gif");
+	gif.render();
 }

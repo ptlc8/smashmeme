@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="create.css" />
 		<script src="easing.js"></script>
 		<script src="models.js?6"></script>
+		<script src="gif.js"></script>
 	</head>
 	<body>
 		<canvas id="preview">
@@ -22,6 +23,7 @@
 		<div id="images">
 			<input type="file" onchange="loadImageFromUpload(this)" />
 			<input type="button" value="Charger une image" onclick="this.parentElement.querySelector('input[type=file]').click()" />
+			<input type="button" value="Convertir en GIF" onclick="convertToGif()" />
 		</div>
 		<div id="folding">
 		    <input type="button" value="⊞ Tout déplier" onclick="for (let legend of document.getElementById('editing').querySelectorAll('legend')) if (legend.parentElement.style.height == '0px') legend.click()" />
