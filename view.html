@@ -28,7 +28,8 @@ window.addEventListener("load", async () => {
 	cvs.width = 800;
 	cvs.height = 800;
 	var startT = Date.now();
-	var model = await loadModelFromJSONFile("<?php echo $_REQUEST['model']; ?>.json");
+	var urlParams = new URLSearchParams(window.location.search);
+	var model = await loadModelFromJSONFile(urlParams.get("from")+".json");
 	var bg = newModel({
 		img: "grid.png"
 	});

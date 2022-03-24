@@ -59,7 +59,8 @@ window.addEventListener("load", async (e) => {
 	cvs.width = parseInt(getComputedStyle(cvs).width);
 	cvs.height = parseInt(getComputedStyle(cvs).height);
 	if (!WebSocket) alert("Votre navigateur ne supporte pas les websockets :'(");
-	wss = new WebSocket("<?php echo isset($_REQUEST['local']) ? "ws://localhost:13028" : "wss://play.agnd.fr:13028" ?>");
+	var urlParams = new URLSearchParams(window.location.search);
+	wss = new WebSocket(urlPrams.has("local") ? "ws://localhost:13028" : "wss://play.agnd.fr:13028");
 	wss.addEventListener("open", onopen);
 	wss.addEventListener("message", onmessage);
 	wss.addEventListener("error", onerror);
