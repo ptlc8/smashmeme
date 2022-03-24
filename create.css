@@ -35,7 +35,7 @@ html, body {
 		height: 50%;
 	}
 	#buttons > input[type=button] {
-		width: calc(33.33% - 3px);
+		width: calc(33.33% - 4px);
 		height: calc(50% - 2px);
 	}
 	#images {
@@ -127,6 +127,9 @@ html, body {
 #images input[type=button] {
     width: calc(50% - 2.5px);
     height: 100%;
+}
+#folding {
+	display: flex;
 }
 #folding input[type=button] {
     width: calc(50% - 2px);
