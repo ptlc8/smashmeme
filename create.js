@@ -325,28 +325,43 @@ function query(text) {
 	return promise;
 }
 
-function convertToGif(duration, delay, quality) {
-	if (duration===undefined)
-		duration = parseInt(prompt("Quelle durée du gif en ms ?"));
-	if (delay===undefined)
-		delay = parseInt(prompt("Quelle durée entre deux images em ms ?"));
-	if (quality===undefined)
-		quality = parseInt(prompt("Quelle qualité ? (4 : bonne, 10 : correct, 20 : légère)"));
+function promptGifData() {
+	return {
+		width: parseInt(prompt("Quelle largeur ?")),
+		height: parseInt(prompt("Quelle largeur ?")),
+		duration: parseInt(prompt("Quelle durée du gif en ms ?")),
+		delay: parseInt(prompt("Quelle durée entre deux images em ms ?")),
+		quality: parseInt(prompt("Quelle qualité ? (4 : bonne, 10 : correct, 20 : légère)")),
+		backgroundColor: prompt("Quelle couleur de fond ? (en hexadécimal)")
+	};
+}
+
+function convertToGif(data) { // width, height, duration, delay, quality, backgroundColor
+	if (!data) data = {};
 	var gif = new GIF({
-		quality: quality
+		quality: data.quality||10
 	});
 	var animName = document.getElementById("anim-select").value;
 	console.log("[GIF] Création des images");
-	for (var i = 0; i < duration; i+=delay) {
+	for (var t = 0; t < (data.duration||1000); t+=data.delay||30) {
 		var cvs = document.createElement("canvas");
-		cvs.width = cvs.height = 600;
+		cvs.width = data.width || 600;
+		cvs.height = data.height || 600;
 		var ctx = cvs.getContext("2d");
+		console.log("a")
+		if (data.backgroundColor) {
+			ctx.fillStyle = data.backgroundColor;
+			ctx.fillRect(0, 0, cvs.width, cvs.height);
+		}
+		console.log("b")
 		ctx.translate(300+x, 400+y);
 		ctx.scale(zoom, zoom);
-		renderModel(ctx, model, i, animName);
+		renderModel(ctx, model, t, animName);
 		ctx.scale(1/zoom, 1/zoom);
+		console.log("d")
 		ctx.translate(-300+x, -400+y);
-		gif.addFrame(cvs, {delay:delay});
+		gif.addFrame(cvs, {delay:data.delay||30});
+		console.log("e")
 	}
 	gif.on("finished", function(blob) {
 		window.open(URL.createObjectURL(blob));

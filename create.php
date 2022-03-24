@@ -23,7 +23,7 @@
 		<div id="images">
 			<input type="file" onchange="loadImageFromUpload(this)" />
 			<input type="button" value="Charger une image" onclick="this.parentElement.querySelector('input[type=file]').click()" />
-			<input type="button" value="Convertir en GIF" onclick="convertToGif()" />
+			<input type="button" value="Convertir en GIF" onclick="convertToGif(promptGifData())" />
 		</div>
 		<div id="folding">
 		    <input type="button" value="⊞ Tout déplier" onclick="for (let legend of document.getElementById('editing').querySelectorAll('legend')) if (legend.parentElement.style.height == '0px') legend.click()" />
