@@ -4,47 +4,37 @@ var InputsManager = (function() {
     class InputsManager {
         constructor(keys, htmlElement = document) {
             this.keys = keys;
+            this.keyboard = {};
+            this.mouse = {buttons:[]};
             this.inputs = {};
             this.hasGamepad = navigator.getGamepads()[0]!=null;
             this.scanResolve = null;
             for (let key of keys) {
-                this.inputs[key[1]] = { pressed: false, clicked: false, value: 0 };
-                /*if (key[1].startsWith("+") || key[1].startsWith("-"))
-                    this.inputs[key[1].substring(1)] = {value:0};*/
+                this.inputs[key[1]] = { pressed: false, clicked: false, value: 0 , exvalue: 0, expressed: false };
+                if (key[1].startsWith("+") || key[1].startsWith("-"))
+                    this.inputs[key[1].substring(1)] = { pressed: false, clicked: false, value: 0 , exvalue: 0, expressed: false };
             }
             // clavier
             htmlElement.addEventListener("keydown", (e) => {
                 this.onKey(e.code);
                 for (const key of this.keys) {
-                    if (key[0] == e.code) {
-                        if (!this.inputs[key[1]].pressed)
-                            this.inputs[key[1]].clicked = true;
-                        this.inputs[key[1]].pressed = true;
-                    }
+                    if (key[0] == e.code)
+                        this.keyboard[key[0]] = true;
                 }
             });
             htmlElement.addEventListener("keyup", (e) => {
                 for (const key of this.keys) {
                     if (key[0] == e.code)
-                        this.inputs[key[1]].pressed = false;
+                        this.keyboard[key[0]] = false;
                 }
             });
             // souris
             htmlElement.addEventListener("mousedown", (e) => {
                 this.onKey("MouseButton" + e.button);
-                for (const key of this.keys) {
-                    if (key[0] == "MouseButton" + e.button) {
-                        if (!this.inputs[key[1]].pressed)
-                            this.inputs[key[1]].clicked = true;
-                        this.inputs[key[1]].pressed = true;
-                    }
-                }
+                this.mouse.buttons[e.button] = true;
             });
             htmlElement.addEventListener("mouseup", (e) => {
-                for (const key of this.keys) {
-                    if (key[0] == "MouseButton" + e.button)
-                        this.inputs[key[1]].pressed = false;
-                }
+                this.mouse.buttons[e.button] = false;
             });
             htmlElement.addEventListener("mousemove", (e) => {
                 if (e.movementX != 0)
@@ -73,37 +63,69 @@ var InputsManager = (function() {
             });
         }
         getInputs() {
-            // gamepad 1 boutons
+            // récupération gamepad 1
             var gamepad = (navigator.getGamepads ? navigator.getGamepads() : [])[0];
-            if (gamepad) {
-                for (const [i, button] of Object.entries(gamepad.buttons)) {
-                    if (button.pressed) this.onKey("GamepadButton" + i);
-                    for (const key of this.keys)
-                        if (key[0] == "GamepadButton" + i) {
-                            if (!this.inputs[key[1]].pressed && button.pressed)
-                                this.inputs[key[1]].clicked = true;
-                            this.inputs[key[1]].pressed = button.pressed;
-                        }
+            for (const key of this.keys) {
+                // clics souris
+                if (key[0].startsWith("MouseButton")) {
+                    var button = (key[0].substring(11));
+                    if (this.mouse.buttons[button]) {
+                        if (!this.inputs[key[1]].expressed)
+                            this.inputs[key[1]].clicked = true;
+                        this.inputs[key[1]].pressed = true;
+                        this.inputs[key[1]].value = 1;
+                    }
                 }
-                for (const [i, axe] of Object.entries(gamepad.axes)) {
-                    var value = Math.round(axe * 50) / 50;
-                    if (value != 0) this.onKey("GamepadAxe" + i, true);
-                    for (let key of this.keys) {
-                        if (key[0] == "GamepadAxe" + i) {
-                            this.inputs[key[1]].value += value;
-                        } else if (key[0] == "-GamepadAxe" + i) {
-                            if (!this.inputs[key[1]].pressed && value<0)
-                                this.inputs[key[1]].clicked = true;
-                            this.inputs[key[1]].pressed = value<0;
-                        } else if (key[0] == "+GamepadAxe" + i) {
-                            if (!this.inputs[key[1]].pressed && value>0)
-                                this.inputs[key[1]].clicked = true;
-                            this.inputs[key[1]].pressed = value>0;
-                        }
+                // boutons manette
+                else if (gamepad && key[0].startsWith("GamepadButton")) {
+                    var button = (key[0].substring(13));
+                    if (gamepad.buttons[button].pressed) {
+                        if (!this.inputs[key[1]].expressed)
+                            this.inputs[key[1]].clicked = true;
+                        this.inputs[key[1]].pressed = true;
+                        this.inputs[key[1]].value = 1;
+                    }
+                }
+                // axes manette
+                else if (gamepad && key[0].startsWith("GamepadAxis")) {
+                    var axis = (key[0].substring(11));
+                    var value = Math.round(gamepad.axes[axis] * 50) / 50;
+                    if (value != 0) {
+                        this.inputs[key[1]].pressed = true;
+                        this.inputs[key[1]].value = value;
+                    }
+                }
+                else if (gamepad && key[0].startsWith("-GamepadAxis")) {
+                    var axis = (key[0].substring(12));
+                    var value = Math.round(gamepad.axes[axis] * 50) / 50;
+                    if (value < 0) {
+                        if (!this.inputs[key[1]].expressed)
+                            this.inputs[key[1]].clicked = true;
+                        this.inputs[key[1]].pressed = true;
+                        this.inputs[key[1]].value = value;
+                    }
+                }
+                else if (gamepad && key[0].startsWith("+GamepadAxis")) {
+                    var axis = (key[0].substring(12));
+                    var value = Math.round(gamepad.axes[axis] * 50) / 50;
+                    if (value > 0) {
+                        if (!this.inputs[key[1]].expressed)
+                            this.inputs[key[1]].clicked = true;
+                        this.inputs[key[1]].pressed = true;
+                        this.inputs[key[1]].value = value;
+                    }
+                }
+                // clavier
+                else if (!key[0].startsWith("Mouse") && !key[0].startsWith("Grab")) {
+                    if (this.keyboard[key[0]]) {
+                        if (!this.inputs[key[1]].expressed)
+                            this.inputs[key[1]].clicked = true;
+                        this.inputs[key[1]].pressed = true;
+                        this.inputs[key[1]].value = 1;
                     }
                 }
             }
-            // axes
+            // simulated axes
             for (const [name, input] of Object.entries(this.inputs)) {
                 if (!input.pressed)
                     continue;
@@ -113,7 +135,7 @@ var InputsManager = (function() {
                     this.inputs[name.slice(1)].value -= 1;
                 }
             }
-            // click axes
+            // clicked with axes
             for (const [name, input] of Object.entries(this.inputs)) {
                 if (input.value != 0 && sign(input.value) != sign(input.exvalue)) {
                     input.clicked = true;
@@ -125,12 +147,18 @@ var InputsManager = (function() {
                 input.clicked = false;
                 input.exvalue = input.value;
                 input.value = 0;
+                input.expressed = input.pressed;
+                input.pressed = false;
             }
             // return
             return inputsToSend;
         }
-        getInputName(input) {
-            
+        getInputNames(input) {
+            return this.keys.filter(function(key){
+                return key[1]==input || key[1]=="-"+input || key[1]=="+"+input;
+            }).map(function(key){
+                return key[0];
+            });
         }
         onKey(key, axis=false) {
             if (this.scanResolve) {

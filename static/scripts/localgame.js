@@ -4,14 +4,18 @@ class LocalGame extends Game {
         this.updateIntervalId = null;
         this.inputsManager = new InputsManager([
             ["Space","jump"],["KeyW","jump"],["GamepadButton3","jump"],["GamepadButton4","jump"],
-            ["KeyW","up"],["-GamepadAxe1","up"],
-            ["KeyD","right"],["+GamepadAxe0","right"],
-            ["KeyS","down"],["+GamepadAxe1","down"],
-            ["KeyA","left"],["-GamepadAxe0","left"],
+            ["KeyW","up"],["-GamepadAxis1","up"],
+            ["KeyD","right"],["+GamepadAxis0","right"],
+            ["KeyS","down"],["+GamepadAxis1","down"],
+            ["KeyA","left"],["-GamepadAxis0","left"],
             ["KeyO","attack"],["GamepadButton1","attack"],
             ["KeyK","special"],["GamepadButton0","special"],
             ["Semicolon","shield"],
-            ["ShiftLeft","shield"]
+            ["ShiftLeft","shield"],
+            ["-GamepadAxis3","attack"],["-GamepadAxis3","up"],
+            ["+GamepadAxis2","attack"],["+GamepadAxis2","right"],
+            ["+GamepadAxis3","attack"],["+GamepadAxis3","down"],
+            ["-GamepadAxis2","attack"],["-GamepadAxis2","left"]
         ]);
         this.join("player");
     }
