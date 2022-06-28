@@ -2,6 +2,12 @@
     "speed": 15,
     "jumps": 2,
     "down": 5,
+    "hitbox": {
+        "t": "c",
+        "x": 0,
+        "y": -100,
+        "r": 100
+    },
     "attack-left": {
         "in": 1000
     },

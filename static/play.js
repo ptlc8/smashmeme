@@ -5,6 +5,7 @@ var game;
 window.addEventListener("load", async (e) => {
     var renderer = new SmashmemeRenderer(document.getElementById("aff"));
     game = new LocalGame();
+    game.debug = true;
     game.startUpdating();
     renderer.start(game);
 });

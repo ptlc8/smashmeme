@@ -2,6 +2,12 @@
     "speed": 10,
     "down": 3,
     "jumps": 2,
+    "hitbox": {
+        "t": "c",
+        "x": 0,
+        "y": -100,
+        "r": 100
+    },
     "idle": {
         "directionable": true
     },

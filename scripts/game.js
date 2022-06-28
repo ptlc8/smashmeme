@@ -10,6 +10,7 @@ class Game {
         this.map = null;
         this.world = null;
         this.inputsHistory = {}; // {player: {tick1: {inputs}, tick2: {inputs}}}
+        this.debug = false;
     }
     get isPlaying() {
         return this.world !== null;

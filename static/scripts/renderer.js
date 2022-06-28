@@ -51,6 +51,7 @@ class SmashmemeRenderer {
         
         this.ctx.scale(1/3, 1/3);
         // Affichage des plateformes
+        this.ctx.fillStyle = "#f5f5f5";
         for (let platform of game.world.map.platforms) {
             this.ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
         }
@@ -62,6 +63,10 @@ class SmashmemeRenderer {
                 entity.anim.start = Date.now();
             }
             this.renderModel(this.getModel(entity.model), Date.now()-entity.anim.start, entity.anim.name);
+            if (game.debug && entity.behaviour.hitbox)
+                this.renderHitbox(entity.behaviour.hitbox, "#0088ff88", true);
+            if (game.debug && entity.behaviour[entity.anim.name].damage && entity.behaviour[entity.anim.name].damage.hitbox)
+                this.renderHitbox(entity.behaviour[entity.anim.name].damage.hitbox, "#ff000088", true);
             this.ctx.translate(-entity.pos.x, -entity.pos.y);
         }
         this.ctx.scale(3, 3);
@@ -131,6 +136,28 @@ class SmashmemeRenderer {
             this.ctx.translate(-model.pos.x-(a.posX||0), -model.pos.y-(a.posY||0));
         }
         if (options.miror) this.ctx.scale(-1, 1);
+    }
+    // Affichage d'une hitbox
+    renderHitbox(hitbox, color, fill=false) {
+        if (hitbox.t === "r") {
+            this.ctx.rect(hitbox.x, hitbox.y, hitbox.w, hitbox.h);
+        } else if (hitbox.t === "c") {
+            this.ctx.beginPath();
+            this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, 0, 2*Math.PI);
+        } else if (hitbox.t === "v") {
+            this.ctx.beginPath();
+            this.ctx.moveTo(hitbox.x, hitbox.y);
+            this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, hitbox.s*Math.PI/180, hitbox.e*Math.PI/180);
+            this.ctx.lineTo(hitbox.x, hitbox.y);
+        }
+        if (fill) {
+            this.ctx.fillStyle = color;
+            this.ctx.fill();
+        } else {
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = 8;
+            this.ctx.stroke();
+        }
     }
 
     // Gestion des images
