@@ -93,3 +93,6 @@ AmbiEngine = function() {
         create: create
     };
 }();
+
+if (typeof exports==="object"&&typeof module!=="undefined")
+    module.exports = AmbiEngine;

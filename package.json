@@ -1,0 +1,23 @@
+{
+  "name": "smashmeme",
+  "version": "1.0.0",
+  "description": "- Jeu style SmashBros - Graphisme 2D - Animations fluides",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptlc8/smashmeme.git"
+  },
+  "author": "Ambi",
+  "bugs": {
+    "url": "https://github.com/ptlc8/smashmeme/issues"
+  },
+  "homepage": "https://github.com/ptlc8/smashmeme#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "ws": "^8.8.0"
+  }
+}

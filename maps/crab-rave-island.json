@@ -1,4 +1,5 @@
 {
+    "name":"Crab rave Island",
     "background":"crab-rave-island",
     "platforms": [
         {"x": -900, "y": 0, "w": 1800, "h": 50},

@@ -10,8 +10,8 @@ html, body, #aff {
     height: 100%;
 }
         </style>
-        <script src="easing.js"></script>
-        <script src="models.js"></script>
+        <script src="scripts/easing.js"></script>
+        <script src="scripts/models.js"></script>
     </head>
     <body>
         <canvas id="aff"></canvas>
@@ -183,14 +183,14 @@ function updateGame() {
     if (true) {
         if (!behaviour["block-move"]) {
             if (keys.right && !keys.left) {
-                character.acc.x += character.behaviour.speed;
+                character.spd.x += character.behaviour.speed/1;
                 if (character.anim.name != "walk-right" && !character.attacking) {
                     character.direction = "right";
                     character.anim.name = "walk-right";
                     character.anim.start = Date.now();
                 }
             } else if (keys.left && !keys.right) {
-                character.acc.x += -character.behaviour.speed;
+                character.spd.x += -character.behaviour.speed/1;
                 if (character.anim.name != "walk-left" && !character.attacking) {
                     character.direction = "left";
                     character.anim.name = "walk-left";
@@ -255,7 +255,7 @@ function updateGame() {
         behaviour = character.behaviour[character.anim.name] || {};
         if (keys.jump && !behaviour["block-jump"] && character.jumps < character.behaviour.jumps) {
             if (!keys.hasJump) {
-                character.spd.y += -character.behaviour.jump.value;
+                character.spd.y += -character.behaviour.jump.value/8;
                 if (!character.attacking) {
                     character.anim.start = Date.now();
                     character.anim.name = "jump";
@@ -268,8 +268,8 @@ function updateGame() {
     if (character.attacking) {
         if (behaviour) {
             if (behaviour.move ) {
-                character.acc.x += behaviour.move.x;
-                character.acc.y += behaviour.move.y;
+                character.spd.x += behaviour.move.x;
+                character.spd.y += behaviour.move.y;
             }
         }
     }
@@ -283,13 +283,14 @@ function updateGame() {
         entity.spd.y = Math.min(entity.spd.y, getDistanceFromFloor(entity.pos.x, entity.pos.y))
         entity.pos.y += entity.spd.y;
         entity.spd.y += entity.acc.y;
-        entity.spd.y /= 1.5; // frottement y
+        entity.acc.y /= 1.5; // frottement y
         if (getDistanceFromFloor(entity.pos.x, entity.pos.y) <= 0 && entity.spd.y >= 0) { // si au sol
             if (entity.acc.y > 0) entity.acc.y = 0;
             entity.jumps = 0;
             entity.specialUp = false;
         } else {
-            entity.acc.y = keys.down ? 32.7 : 32.7/2; // g sur Terre en cm.(s/30)^-2 /3
+            //entity.acc.y = keys.down ? 32.7 : 32.7/2; // g sur Terre en cm.(s/30)^-2 /3
+            entity.acc.y = keys.down ? 5 : 5/2;
         }
     }
 }

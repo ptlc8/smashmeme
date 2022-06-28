@@ -348,20 +348,16 @@ function convertToGif(data) { // width, height, duration, delay, quality, backgr
 		cvs.width = data.width || 600;
 		cvs.height = data.height || 600;
 		var ctx = cvs.getContext("2d");
-		console.log("a")
 		if (data.backgroundColor) {
 			ctx.fillStyle = data.backgroundColor;
 			ctx.fillRect(0, 0, cvs.width, cvs.height);
 		}
-		console.log("b")
-		ctx.translate(300+x, 400+y);
+		ctx.translate(cvs.width/2+x, 2*cvs.height/3+y);
 		ctx.scale(zoom, zoom);
 		renderModel(ctx, model, t, animName);
 		ctx.scale(1/zoom, 1/zoom);
-		console.log("d")
-		ctx.translate(-300+x, -400+y);
+		ctx.translate(-cvs.width/2+x, -2*cvs.height/3+y);
 		gif.addFrame(cvs, {delay:data.delay||30});
-		console.log("e")
 	}
 	gif.on("finished", function(blob) {
 		window.open(URL.createObjectURL(blob));
