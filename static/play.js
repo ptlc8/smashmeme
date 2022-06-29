@@ -14,12 +14,15 @@ window.addEventListener("load", async (e) => {
 
 
 document.getElementById("aff").addEventListener("click", (e) => {
-    var w = e.target.width, h = e.target.height;
+    var ratio = Math.min(e.target.width/SmashmemeRenderer.WIDTH, e.target.height/SmashmemeRenderer.HEIGHT);
+    var x = (e.clientX - e.target.width/2) / ratio;
+    var y = (e.clientY - e.target.height/2) / ratio;
+    var w = SmashmemeRenderer.WIDTH, h = SmashmemeRenderer.HEIGHT;
     switch (game.state) {
         case Game.CHOOSE:
             let perL = 6;
-            if (e.button == 0 && w/8 < e.clientX && e.clientX < 7*w/8) {
-                let index = parseInt(e.clientY/(w/8))*perL+parseInt(e.clientX/(w/8)-1);
+            if (e.button == 0) {
+                let index = Math.floor((y+h/2-24)/200) * perL + Math.floor((x+w/2)/w*perL);
                 if (index < Object.keys(Smashmeme.smashers).length) {
                     game.choose("player", Smashmeme.smashers[index]);
                     game.setMap(Smashmeme.maps[0]);

@@ -5,6 +5,7 @@ class SmashmemeRenderer {
         this.models = {};
         Loader.loadModelFromJSONFile("no").then(model => this.models.no=model);
         Loader.loadModelFromJSONFile("loading").then(model => this.models.loading=model);
+        this.camera = {zoom:1/2, zooms:[], pos:{x:0, y:0}};
         this.background = {};
         this.background.model = "crab-rave-island";
         this.background.anim = {name: "default", start: Date.now()};
@@ -14,7 +15,7 @@ class SmashmemeRenderer {
         this.cvs = canvas;
         this.cvs.width = parseInt(getComputedStyle(this.cvs).width);
         this.cvs.height = parseInt(getComputedStyle(this.cvs).height);
-        this.ctx = canvas.getContext("2d");
+        this.ctx = canvas.getContext("2d", { alpha: false });
         window.addEventListener("resize", (e) => {
             this.cvs.width = parseInt(getComputedStyle(this.cvs).width);
             this.cvs.height = parseInt(getComputedStyle(this.cvs).height);
@@ -31,10 +32,40 @@ class SmashmemeRenderer {
     stop() {
         clearInterval(this.renderIntervalId);
     }
+    // Mettre à jour de la caméra
+    updateCamera(game) {
+        var minX, maxX, minY, maxY;
+        minX = minY = Infinity;
+        maxX = maxY = -Infinity;
+        for (let smasher of Object.values(game.world.entities)) {
+            if (smasher.pos.x < minX) minX = smasher.pos.x;
+            if (smasher.pos.x > maxX) maxX = smasher.pos.x;
+            if (smasher.pos.y < minY) minY = smasher.pos.y;
+            if (smasher.pos.y > maxY) maxY = smasher.pos.y;
+        }
+        this.camera.pos.x = (minX+maxX)/2;
+        this.camera.pos.y = (minY+maxY)/2 - 50;
+        //this.camera.zooms.push(1/(1+Math.sqrt(Math.pow(maxX-minX, 2)+Math.pow(maxY-minY, 2))/2000));
+        this.camera.zooms.push(Math.min(1,600/Math.sqrt(Math.pow(maxX-minX, 2)+Math.pow(maxY-minY, 2))));
+        if (this.camera.zooms.length > 10) this.camera.zooms.shift();
+        this.camera.zoom = (this.camera.zooms[0]+this.camera.zooms[this.camera.zooms.length-1])/2;
+    }
     // Affichage d'une partie
     renderGame(game) {
-        if (this.ctx.resetTransform) this.ctx.resetTransform();
+        // Nettoyage
+        if (this.ctx.resetTransform) this.ctx.resetTransform(); // TODO : if not supported -> fail
         this.ctx.clearRect(0, 0, this.cvs.width, this.cvs.height);
+        // Centrage et normalisation
+        var ratio = Math.min(this.cvs.width/SmashmemeRenderer.WIDTH, this.cvs.height/SmashmemeRenderer.HEIGHT);
+        this.ctx.translate(this.cvs.width/2, this.cvs.height/2);
+        this.ctx.scale(ratio, ratio);
+        // Affichage du fond
+        this.renderModel(this.getModel(this.background.model), Date.now()-this.background.anim.start, this.background.anim.name);
+        // Dessin
+        if (game.debug) {
+            this.ctx.strokeStyle = "#00ff00";
+            this.ctx.strokeRect(-SmashmemeRenderer.WIDTH/2, -SmashmemeRenderer.HEIGHT/2, SmashmemeRenderer.WIDTH, SmashmemeRenderer.HEIGHT);
+        }
         switch (game.state) {
             case Game.CHOOSE:
                 this.renderChoosingGame(game, 0);
@@ -43,13 +74,15 @@ class SmashmemeRenderer {
                 this.renderPlayingGame(game);
                 break;
         }
+        // Dénormalisation et décentrage
+        this.ctx.scale(1/ratio, 1/ratio);
+        this.ctx.translate(-this.cvs.width/2, -this.cvs.height/2);
     }
     renderPlayingGame(game) {
-        this.ctx.translate(this.cvs.width/2, this.cvs.height/2);
-        // Affichage du fond
-        this.renderModel(this.getModel(this.background.model), Date.now()-this.background.anim.start, this.background.anim.name);
+        this.updateCamera(game);
         
-        this.ctx.scale(1/3, 1/3);
+        this.ctx.scale(this.camera.zoom, this.camera.zoom);
+        this.ctx.translate(-this.camera.pos.x, -this.camera.pos.y);
         // Affichage des plateformes
         this.ctx.fillStyle = "#f5f5f5";
         for (let platform of game.world.map.platforms) {
@@ -69,34 +102,32 @@ class SmashmemeRenderer {
                 this.renderHitbox(entity.behaviour[entity.anim.name].damage.hitbox, "#ff000088", true);
             this.ctx.translate(-entity.pos.x, -entity.pos.y);
         }
-        this.ctx.scale(3, 3);
-        
-        this.ctx.translate(-this.cvs.width/2, -this.cvs.height/2);
+        this.ctx.translate(this.camera.pos.x, this.camera.pos.y);
+        this.ctx.scale(1/this.camera.zoom, 1/this.camera.zoom);
     }
     renderChoosingGame(game, startT) {
-        var w = this.cvs.width;
-        var h = this.cvs.height;
+        var w = SmashmemeRenderer.WIDTH;
+        var h = SmashmemeRenderer.HEIGHT;
         var z = w/3200;
-        // Affichage du fond
-        this.ctx.translate(w/2, h/2);
-        this.renderModel(this.getModel(this.background.model), Date.now()-this.background.anim.start, this.background.anim.name);
-        this.ctx.translate(-w/2, -h/2);
         // Affichage des persos
-        this.ctx.scale(z, z);
-        this.ctx.translate(200+w/8/z, 400);
+        //this.ctx.scale(z, z);
+        //this.ctx.translate(200+w/8/z, 0);
         let perL = 6; // = parseInt(w/400/z*3/4)
+        this.ctx.translate(-w/2, 200-h/2);
         for (let i = 0; i < Smashmeme.smashers.length/perL; i++) {
             for (let j = 0; j < perL && j+perL*i < Smashmeme.smashers.length; j++) {
-                this.ctx.translate(j*400, i*400);
+                this.ctx.translate(j*w/perL+w/perL/2, i*200);
+                this.ctx.scale(1/2, 1/2);
                 let smasher = Smashmeme.smashers[i*perL+j];
                 this.renderModel(this.getModel(smasher.model), Date.now()-startT, "idle" + (smasher.behaviour["idle"]&&smasher.behaviour["idle"].directionable?"-right":""));
-                this.renderText(this.ctx, smasher.name, 0, 64, 48, "#f5f5f5");
-                this.ctx.translate(-j*400, -i*400);
+                this.renderText(smasher.name, 0, 64, 48, "#f5f5f5");
+                this.ctx.scale(2, 2);
+                this.ctx.translate(-j*w/perL-w/perL/2, -i*200);
             }
         }
-        this.ctx.translate(-200-w/8/z, -400);
-        this.ctx.scale(1/z, 1/z);
-        this.ctx.translate(-w/2, -h/2);
+        this.ctx.translate(w/2, 0);
+        //this.ctx.translate(-200-w/8/z, -400);
+        //this.ctx.scale(1/z, 1/z);
     }
     // Affichage d'un texte
     renderText(text="", x=0, y=0, size=10, color) {
@@ -222,3 +253,6 @@ class SmashmemeRenderer {
         return anim;
     }
 }
+
+SmashmemeRenderer.WIDTH = 1620;
+SmashmemeRenderer.HEIGHT = 1000;
