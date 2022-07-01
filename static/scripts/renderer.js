@@ -60,7 +60,9 @@ class SmashmemeRenderer {
         this.ctx.translate(this.cvs.width/2, this.cvs.height/2);
         this.ctx.scale(ratio, ratio);
         // Affichage du fond
+        this.ctx.translate(-this.camera.pos.x/6, -this.camera.pos.y/6);
         this.renderModel(this.getModel(this.background.model), Date.now()-this.background.anim.start, this.background.anim.name);
+        this.ctx.translate(this.camera.pos.x/6, this.camera.pos.y/6);
         // Dessin
         if (game.debug) {
             this.ctx.strokeStyle = "#00ff00";
