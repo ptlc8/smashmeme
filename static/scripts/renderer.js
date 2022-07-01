@@ -33,11 +33,17 @@ class SmashmemeRenderer {
         clearInterval(this.renderIntervalId);
     }
     // Mettre à jour de la caméra
-    updateCamera(game) {
+    updateCamera(game, entity=null) {
         var minX, maxX, minY, maxY;
         minX = minY = Infinity;
         maxX = maxY = -Infinity;
-        for (let smasher of Object.values(game.world.entities)) {
+        var entities;
+        if(entity != null){
+            entities = [entity];
+        } else{
+            entities = Object.values(game.world.entities);
+        }
+        for (let smasher of entities) {
             if (smasher.pos.x < minX) minX = smasher.pos.x;
             if (smasher.pos.x > maxX) maxX = smasher.pos.x;
             if (smasher.pos.y < minY) minY = smasher.pos.y;
@@ -70,6 +76,9 @@ class SmashmemeRenderer {
             case Game.CHOOSE:
                 this.renderChoosingGame(game, 0);
                 break;
+            case Game.COUNTDOWN:
+                this.renderCountdownGame(game);
+                break;
             case Game.PLAY:
                 this.renderPlayingGame(game);
                 break;
@@ -80,30 +89,7 @@ class SmashmemeRenderer {
     }
     renderPlayingGame(game) {
         this.updateCamera(game);
-        
-        this.ctx.scale(this.camera.zoom, this.camera.zoom);
-        this.ctx.translate(-this.camera.pos.x, -this.camera.pos.y);
-        // Affichage des plateformes
-        this.ctx.fillStyle = "#f5f5f5";
-        for (let platform of game.world.map.platforms) {
-            this.ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
-        }
-        // Affichage des entités
-        for (let entity of game.world.entities) {
-            this.ctx.translate(entity.pos.x, entity.pos.y);
-            if (entity.behaviour[entity.anim.name] && Date.now()-entity.anim.start > entity.behaviour[entity.anim.name].in) {
-                entity.anim.name = "idle" + ((entity.behaviour.idle && entity.behaviour.idle.directionable)?"-"+entity.direction:"");;
-                entity.anim.start = Date.now();
-            }
-            this.renderModel(this.getModel(entity.model), Date.now()-entity.anim.start, entity.anim.name);
-            if (game.debug && entity.behaviour.hitbox)
-                this.renderHitbox(entity.behaviour.hitbox, "#0088ff88", true);
-            if (game.debug && entity.behaviour[entity.anim.name].damage && entity.behaviour[entity.anim.name].damage.hitbox)
-                this.renderHitbox(entity.behaviour[entity.anim.name].damage.hitbox, "#ff000088", true);
-            this.ctx.translate(-entity.pos.x, -entity.pos.y);
-        }
-        this.ctx.translate(this.camera.pos.x, this.camera.pos.y);
-        this.ctx.scale(1/this.camera.zoom, 1/this.camera.zoom);
+        this.renderWorld(game.world, game.debug);
     }
     renderChoosingGame(game, startT) {
         var w = SmashmemeRenderer.WIDTH;
@@ -129,12 +115,48 @@ class SmashmemeRenderer {
         //this.ctx.translate(-200-w/8/z, -400);
         //this.ctx.scale(1/z, 1/z);
     }
+    renderCountdownGame(game){
+        var countdown = 3-parseInt((Date.now()-game.stateStartTime)/1000);
+        if(countdown == 3){
+            this.updateCamera(game, Object.values(game.world.smashers)[0]);
+        } else if(countdown == 2){
+            this.updateCamera(game, Object.values(game.world.smashers)[Object.values(game.world.smashers).length-1]);
+        }
+
+        this.renderWorld(game.world, game.debug);
+        this.renderText(countdown, 0, 0, 500, "#000000");
+    }
+    renderWorld(world, debug=false){
+        this.ctx.scale(this.camera.zoom, this.camera.zoom);
+        this.ctx.translate(-this.camera.pos.x, -this.camera.pos.y);
+        // Affichage des plateformes
+        this.ctx.fillStyle = "#f5f5f5";
+        for (let platform of world.map.platforms) {
+            this.ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
+        }
+        // Affichage des entités
+        for (let entity of world.entities) {
+            this.ctx.translate(entity.pos.x, entity.pos.y);
+            if (entity.behaviour[entity.anim.name] && Date.now()-entity.anim.start > entity.behaviour[entity.anim.name].in) {
+                entity.anim.name = "idle" + ((entity.behaviour.idle && entity.behaviour.idle.directionable)?"-"+entity.direction:"");;
+                entity.anim.start = Date.now();
+            }
+            this.renderModel(this.getModel(entity.model), Date.now()-entity.anim.start, entity.anim.name);
+            if (debug && entity.behaviour.hitbox)
+                this.renderHitbox(entity.behaviour.hitbox, "#0088ff88", true);
+            if (debug && entity.behaviour[entity.anim.name].damage && entity.behaviour[entity.anim.name].damage.hitbox)
+                this.renderHitbox(entity.behaviour[entity.anim.name].damage.hitbox, "#ff000088", true);
+            this.ctx.translate(-entity.pos.x, -entity.pos.y);
+        }
+        this.ctx.translate(this.camera.pos.x, this.camera.pos.y);
+        this.ctx.scale(1/this.camera.zoom, 1/this.camera.zoom);
+    }
     // Affichage d'un texte
     renderText(text="", x=0, y=0, size=10, color) {
         this.ctx.textAlign = "center";
         this.ctx.font = size + "px Arial";
         if (color) this.ctx.fillStyle = color;
-        this.ctx.fillText(text, x, y);
+        this.ctx.fillText(text, x, y+size/2.5);
     }
     // Affichage d'un modèle
     renderModel(model, t, animName, options={}) { // t en ms

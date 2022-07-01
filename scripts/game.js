@@ -11,6 +11,7 @@ class Game {
         this.world = null;
         this.inputsHistory = {}; // {player: {tick1: {inputs}, tick2: {inputs}}}
         this.debug = false;
+        this.stateStartTime = Date.now();
     }
     get isPlaying() {
         return this.world !== null;
@@ -31,7 +32,9 @@ class Game {
     start() {
         if (this.state==Game.CHOOSE && this.map!==null) {
             this.world = new World(this.map, this.smashers);
-            this.state = Game.PLAY;
+            this.stateStartTime = Date.now();
+            this.state = Game.COUNTDOWN;
+            setTimeout(() => this.state = Game.PLAY, 3000);
         } else {
             console.error("can't start game");
         }
@@ -53,6 +56,7 @@ class Game {
 }
 
 Game.CHOOSE = Symbol("CHOOSE");
+Game.COUNTDOWN = Symbol("COUNTDOWN");
 Game.PLAY = Symbol("PLAY");
 
 if (typeof exports==="object" && typeof module!=="undefined")

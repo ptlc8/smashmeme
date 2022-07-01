@@ -35,12 +35,18 @@ class LocalGame extends Game {
             case Game.CHOOSE:
                 this.updateChoosingGame(game);
                 break;
+            case Game.COUNTDOWN:
+                this.updateCountdownGame(game);
+                break;
             case Game.PLAY:
                 this.updatePlayingGame(game);
                 break;
         }
     }
     updateChoosingGame(game) {
+        
+    }
+    updateCountdownGame(game) {
         
     }
     updatePlayingGame(game) {
