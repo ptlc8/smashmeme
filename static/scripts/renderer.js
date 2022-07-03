@@ -139,15 +139,11 @@ class SmashmemeRenderer {
         // Affichage des entités
         for (let entity of world.entities) {
             this.ctx.translate(entity.pos.x, entity.pos.y);
-            if (entity.behaviour[entity.anim.name] && Date.now()-entity.anim.start > entity.behaviour[entity.anim.name].in) {
-                entity.anim.name = "idle" + ((entity.behaviour.idle && entity.behaviour.idle.directionable)?"-"+entity.direction:"");;
-                entity.anim.start = Date.now();
-            }
-            this.renderModel(this.getModel(entity.model), Date.now()-entity.anim.start, entity.anim.name);
+            this.renderModel(this.getModel(entity.model), Date.now()-entity.action.start, entity.action.name);
             if (debug && entity.behaviour.hitbox)
                 this.renderHitbox(entity.behaviour.hitbox, "#0088ff88", true);
-            if (debug && entity.behaviour[entity.anim.name].damage && entity.behaviour[entity.anim.name].damage.hitbox)
-                this.renderHitbox(entity.behaviour[entity.anim.name].damage.hitbox, "#ff000088", true);
+            if (debug && entity.behaviour[entity.action.name].damage && entity.behaviour[entity.action.name].damage.hitbox)
+                this.renderHitbox(entity.behaviour[entity.action.name].damage.hitbox, "#ff000088", true);
             this.ctx.translate(-entity.pos.x, -entity.pos.y);
         }
         this.ctx.translate(this.camera.pos.x, this.camera.pos.y);

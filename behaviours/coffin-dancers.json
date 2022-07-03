@@ -1,5 +1,4 @@
 {
-    "speed": 15,
     "jumps": 2,
     "down": 5,
     "hitbox": {
@@ -8,6 +7,22 @@
         "y": -100,
         "r": 100
     },
+    "idle": {},
+    "walk": {
+        "directionable": true
+    },
+    "walk-left": {
+        "move": {"x":-0.5, "y":0}
+    },
+    "walk-right": {
+        "move": {"x":0.5, "y":0}
+    },
+    "jump": {
+        "move": {"reset":true, "x":0, "y":-2.5}
+    },
+    "attack": {
+
+    },
     "attack-left": {
         "in": 1000
     },
@@ -15,25 +30,24 @@
         "in": 1000
     },
     "attack-up": {
-        "in": 1000
+
     },
     "attack-down": {
-        "in": 1000
+
+    },
+    "special": {
+
     },
     "special-left": {
-        "in": 0
+
     },
     "special-right": {
-        "in": 0
+
     },
     "special-up": {
-        "in": 0
+
     },
     "special-down": {
-        "in": 0
-    },
-    "jump": {
-        "value": 150,
-        "in": 0
+
     }
 }

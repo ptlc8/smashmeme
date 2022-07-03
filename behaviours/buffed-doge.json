@@ -1,5 +1,4 @@
 {
-    "speed": 10,
     "down": 3,
     "jumps": 2,
     "hitbox": {
@@ -10,6 +9,23 @@
     },
     "idle": {
         "directionable": true
+    },
+    "idle-left": {},
+    "idle-right": {},
+    "walk": {
+        "directionable": true
+    },
+    "walk-left": {
+        "move": {"x":-0.35, "y":0}
+    },
+    "walk-right": {
+        "move": {"x":0.35, "y":0}
+    },
+    "jump": {
+        "move": {"reset":true, "x":0, "y":-2}
+    },
+    "attack": {
+
     },
     "attack-left": {
         "in": 2000
@@ -23,6 +39,9 @@
     "attack-down": {
         "in": 2000
     },
+    "special": {
+
+    },
     "special-left": {
         "in": 2000,
         "thrOw": {
@@ -30,7 +49,7 @@
             "in": 667,
             "model": "doge-chems",
             "behaviours": "doge-chems",
-            "move": {"x":-20,"y":0},
+            "move": {"x":-0.75,"y":0},
             "weight": 0,
             "pos": {"x":0, "y":-110}
         }
@@ -42,27 +61,23 @@
             "in": 667,
             "model": "doge-chems",
             "behaviours": "doge-chems",
-            "move": {"x":20,"y":0},
+            "move": {"x":0.75,"y":0},
             "weight": 0,
             "pos": {"x":0, "y":-110}
         }
     },
     "special-up": {
-        "in": 2000,
         "directionable": true
     },
     "special-up-right": {
         "in": 2000,
-        "move": {"x": 0, "y":-25},
-        "block-jump": true
+        "move": {"x": 0, "y":-0.25}
     },
     "special-up-left": {
         "in": 2000,
-        "move": {"x": 0, "y":-25},
-        "block-jump": true
+        "move": {"x": 0, "y":-0.25}
     },
     "special-down": {
-        "in": 3000,
         "directionable": true
     },
     "special-down-right": {
@@ -70,9 +85,5 @@
     },
     "special-down-left": {
         "in": 3000
-    },
-    "jump": {
-        "value": 200,
-        "in": 800
     }
 }
