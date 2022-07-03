@@ -1,6 +1,7 @@
 const express = require("express");
 const ws = require("ws");
 const smashmeme = require("./scripts/smashmeme");
+smashmeme.load();
 
 // Create HTTP server
 const app = express();

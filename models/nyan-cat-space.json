@@ -1,0 +1,1 @@
+{"img":"nyan-cat-space.jpg","bh":false,"origin":{"x":0.5,"y":0.5},"pos":{"x":1000,"y":0},"rot":0,"scale":{"x":1.2,"y":1.2},"trsp":null,"anims":{"idle":[{"on":"posX","steps":[960,-960],"in":8000,"func":"linear"}]},"pinneds":[{"img":"nyan-cat-space.jpg","bh":false,"origin":{"x":0.5,"y":0.5},"pos":{"x":-800,"y":452.5},"rot":0,"scale":{"x":1,"y":1},"trsp":0,"anims":{},"pinneds":[]}]}

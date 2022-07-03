@@ -6,9 +6,6 @@ class SmashmemeRenderer {
         Loader.loadModelFromJSONFile("no").then(model => this.models.no=model);
         Loader.loadModelFromJSONFile("loading").then(model => this.models.loading=model);
         this.camera = {zoom:1/2, zooms:[], pos:{x:0, y:0}};
-        this.background = {};
-        this.background.model = "crab-rave-island";
-        this.background.anim = {name: "default", start: Date.now()};
     }
 
     setCanvas(canvas) {
@@ -66,9 +63,11 @@ class SmashmemeRenderer {
         this.ctx.translate(this.cvs.width/2, this.cvs.height/2);
         this.ctx.scale(ratio, ratio);
         // Affichage du fond
-        this.ctx.translate(-this.camera.pos.x/6, -this.camera.pos.y/6);
-        this.renderModel(this.getModel(this.background.model), Date.now()-this.background.anim.start, this.background.anim.name);
-        this.ctx.translate(this.camera.pos.x/6, this.camera.pos.y/6);
+        if (game.map) {
+            this.ctx.translate(-this.camera.pos.x/6, -this.camera.pos.y/6);
+            this.renderModel(this.getModel(game.map.background), Date.now(), "idle");
+            this.ctx.translate(this.camera.pos.x/6, this.camera.pos.y/6);
+        }
         // Dessin
         if (game.debug) {
             this.ctx.strokeStyle = "#00ff00";
@@ -98,8 +97,6 @@ class SmashmemeRenderer {
         var h = SmashmemeRenderer.HEIGHT;
         var z = w/3200;
         // Affichage des persos
-        //this.ctx.scale(z, z);
-        //this.ctx.translate(200+w/8/z, 0);
         let perL = 6; // = parseInt(w/400/z*3/4)
         this.ctx.translate(-w/2, 200-h/2);
         for (let i = 0; i < Smashmeme.smashers.length/perL; i++) {
@@ -114,8 +111,6 @@ class SmashmemeRenderer {
             }
         }
         this.ctx.translate(w/2, 0);
-        //this.ctx.translate(-200-w/8/z, -400);
-        //this.ctx.scale(1/z, 1/z);
     }
     renderCountdownGame(game){
         var countdown = 3-parseInt((Date.now()-game.stateStartTime)/1000);
@@ -134,7 +129,10 @@ class SmashmemeRenderer {
         // Affichage des plateformes
         this.ctx.fillStyle = "#f5f5f5";
         for (let platform of world.map.platforms) {
-            this.ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
+            this.ctx.translate(platform.x, platform.y);
+            this.renderModel(this.getModel(platform.model), Date.now(), "idle");
+            if (debug) this.renderHitbox(platform.hitbox, "#ffff0088", true);
+            this.ctx.translate(-platform.x, -platform.y);
         }
         // Affichage des entités
         for (let entity of world.entities) {
@@ -190,15 +188,14 @@ class SmashmemeRenderer {
     }
     // Affichage d'une hitbox
     renderHitbox(hitbox, color, fill=false) {
+        this.ctx.beginPath();
         if (hitbox.t === "r") {
-            this.ctx.rect(hitbox.x, hitbox.y, hitbox.w, hitbox.h);
+            this.ctx.rect(hitbox.x-hitbox.w/2, hitbox.y-hitbox.h/2, hitbox.w, hitbox.h);
         } else if (hitbox.t === "c") {
-            this.ctx.beginPath();
             this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, 0, 2*Math.PI);
         } else if (hitbox.t === "v") {
-            this.ctx.beginPath();
             this.ctx.moveTo(hitbox.x, hitbox.y);
-            this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, hitbox.s*Math.PI/180, hitbox.e*Math.PI/180);
+            this.ctx.arc(hitbox.x-hitbox.w/2, hitbox.y-hitbox.h/2, hitbox.r, hitbox.s*Math.PI/180, hitbox.e*Math.PI/180);
             this.ctx.lineTo(hitbox.x, hitbox.y);
         }
         if (fill) {

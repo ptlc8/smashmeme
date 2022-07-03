@@ -2,12 +2,15 @@
 
 var game;
 
-window.addEventListener("load", async (e) => {
-    var renderer = new SmashmemeRenderer(document.getElementById("aff"));
-    game = new LocalGame();
-    game.debug = true;
-    game.startUpdating();
-    renderer.start(game);
+window.addEventListener("load", e => {
+    Smashmeme.load().then(() => {
+        var renderer = new SmashmemeRenderer(document.getElementById("aff"));
+        game = new LocalGame();
+        game.debug = false;
+        game.startUpdating();
+        game.setMap(Smashmeme.maps[Math.floor(Math.random()*Smashmeme.maps.length)]);
+        renderer.start(game);
+    });
 });
 
 
@@ -25,7 +28,6 @@ document.getElementById("aff").addEventListener("click", (e) => {
                 let index = Math.floor((y+h/2-24)/200) * perL + Math.floor((x+w/2)/w*perL);
                 if (index < Object.keys(Smashmeme.smashers).length) {
                     game.choose("player", Smashmeme.smashers[index]);
-                    game.setMap(Smashmeme.maps[0]);
                     game.start();
                 }
             }

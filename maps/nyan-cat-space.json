@@ -1,0 +1,37 @@
+{
+    "name":"Nyan Cat space",
+    "background":"nyan-cat-space",
+    "platforms": [
+        {
+            "x": -350, "y": 0,
+            "model":"nyan-big-platform",
+            "hitbox": {"t":"r", "x":0, "y":0, "w":700, "h":30}
+        },
+        {
+            "x": 350, "y": 0,
+            "model":"nyan-big-platform",
+            "hitbox": {"t":"r", "x":0, "y":0, "w":700, "h":30}
+        },
+        {
+            "x": -400, "y": -250,
+            "model":"nyan-small-platform",
+            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":50}
+        },
+        {
+            "x": 400, "y": -250,
+            "model":"nyan-small-platform",
+            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":50}
+        },
+        {
+            "x": 0, "y": -500,
+            "model":"nyan-small-platform",
+            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":50}
+        }
+    ],
+    "spawns": [
+        {"x":500, "y":-275},
+        {"x":-500, "y":-275},
+        {"x":0, "y":-525},
+        {"x":0, "y":-15}
+    ]
+}

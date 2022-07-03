@@ -1,5 +1,5 @@
 if (typeof require === "function") {
-    global.Entity = require("./entity");
+    global.SmasherEntity = require("./smasherentity");
 }
 
 class World {
@@ -9,9 +9,9 @@ class World {
         this.smashers = {};
         this.entities = [];
         this.inputs = {};
-        for (let player in smashers) {
+        for (const [index,player] of Object.entries(Object.keys(smashers))) {
             this.inputs[player] = { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
-            this.entities.push(this.smashers[player] = new Entity(smashers[player]));
+            this.entities.push(this.smashers[player] = new SmasherEntity(smashers[player], this.map.spawns[index]));
         }
     }
     update() {
@@ -56,7 +56,6 @@ class World {
                 }
                 // Saut
                 else if (inputs.jump.clicked && smasher.jumps < smasher.behaviour.jumps) {
-                    //smasher.spd.y = -smasher.behaviour.jump.value;
                     action = "jump";
                     smasher.jumps++;
                 // Déplacement gauche/droite
@@ -120,8 +119,8 @@ class World {
     getDistanceFromFloor(x, y) {
         let dist = Infinity;
         for (let platform of this.map.platforms) {
-            if (platform.x <= x && x <= platform.x + platform.w && y <= platform.y) {
-                dist = Math.min(dist, platform.y - y);
+            if (platform.x+platform.hitbox.x-platform.hitbox.w/2 <= x && x <= platform.x+platform.hitbox.x+platform.hitbox.w/2 && y <= platform.y+platform.hitbox.y-platform.hitbox.h/2) {
+                dist = Math.min(dist, platform.y+platform.hitbox.y-platform.hitbox.h/2 - y);
             }
         }
         return dist;
