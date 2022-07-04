@@ -19,10 +19,15 @@ class SmashmemeServer {
         }
     }
     onConnection(id) {
+        if (this.debug) console.log("Client "+id+" connected");
         this.players[id] = { id };
         this.send(id, { type:"welcome", id, version:process.env.npm_package_version });
     }
     onDisconnection(id) {
+        if (this.debug) console.log("Client "+id+" disconnected");
+        if (this.players[id].game) {
+            this.games[this.players[id].game].leave(id);
+        }
         delete this.players[id];
     }
     onReceive(id, data) {
