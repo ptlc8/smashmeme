@@ -8,7 +8,7 @@ window.addEventListener("load", e => {
         game = new LocalGame();
         game.debug = false;
         game.startUpdating();
-        game.setMap(Smashmeme.maps[Math.floor(Math.random()*Smashmeme.maps.length)]);
+        game.setMap(Smashmeme.getRandomMap().id);
         renderer.start(game);
     });
 });
@@ -25,13 +25,13 @@ document.getElementById("aff").addEventListener("click", (e) => {
         case Game.CHOOSE:
             let perL = 6;
             if (e.button == 0) {
+                var smashers = Object.keys(Smashmeme.smashers);
                 let index = Math.floor((y+h/2-24)/200) * perL + Math.floor((x+w/2)/w*perL);
-                if (index < Object.keys(Smashmeme.smashers).length) {
-                    game.choose("player", Smashmeme.smashers[index]);
+                if (0 <= index && index < smashers.length) {
+                    game.choose(1, smashers[index]);
                     game.start();
                 }
             }
             break;
     }
-    e.clientX, e.clientY, e.button==0;
 });

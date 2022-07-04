@@ -1,17 +1,18 @@
 if (typeof require === "function") {
     global.SmasherEntity = require("./smasherentity");
+    global.Smashmeme = require("./smashmeme");
 }
 
 class World {
-    constructor(map, smashers = {}) {
-        this.map = map;
+    constructor(map, smashers={}) {
+        this.map = Smashmeme.maps[map];
         this.tick = 0;
         this.smashers = {};
         this.entities = [];
         this.inputs = {};
-        for (const [index,player] of Object.entries(Object.keys(smashers))) {
-            this.inputs[player] = { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
-            this.entities.push(this.smashers[player] = new SmasherEntity(smashers[player], this.map.spawns[index]));
+        for (const [index,playerId] of Object.entries(Object.keys(smashers))) {
+            this.inputs[playerId] = { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
+            this.entities.push(this.smashers[playerId] = new SmasherEntity(Smashmeme.smashers[smashers[playerId]], this.map.spawns[index]));
         }
     }
     update() {
@@ -125,8 +126,8 @@ class World {
         }
         return dist;
     }
-    setInputs(player, inputs) {
-        this.inputs[player] = inputs;
+    setInputs(playerId, inputs) {
+        this.inputs[playerId] = inputs;
     }
 }
 

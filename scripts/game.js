@@ -12,46 +12,105 @@ class Game {
         this.inputsHistory = {}; // {player: {tick1: {inputs}, tick2: {inputs}}}
         this.debug = false;
         this.stateStartTime = Date.now();
+        this.updateIntervalId = null;
     }
     get isPlaying() {
         return this.world !== null;
     }
+    canJoin() {
+        return true;
+    }
     join(player) {
-        this.players.push(player)
+        if (this.canJoin()) {
+            this.players.push(player);
+            return true;
+        }
+        return false;
     }
-    leave(player) {
-        this.players.splice(this.players.indexOf(player), 1);
-        delete this.smashers[player];
+    leave(playerId) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].id == playerId)
+                this.players.splice(i, 1);
+        }
+        delete this.smashers[playerId];
+        return true;
     }
-    choose(player, smasher) {
-        this.smashers[player] = smasher;
+    choose(playerId, smasher) {
+        this.smashers[playerId] = smasher;
+        return true;
     }
     setMap(map) {
         this.map = map;
+        return true;
+    }
+    canStart() {
+        if (this.state!=Game.CHOOSE || this.map==null)
+            return false;
+        for (var player of this.players) {
+            if (!this.smashers[player.id])
+                return false;
+        }
+        return true;
     }
     start() {
-        if (this.state==Game.CHOOSE && this.map!==null) {
+        if (this.canStart()) {
             this.world = new World(this.map, this.smashers);
             this.stateStartTime = Date.now();
             this.state = Game.COUNTDOWN;
             setTimeout(() => this.state = Game.PLAY, 3000);
-        } else {
-            console.error("can't start game");
+            return true;
         }
+        console.error("can't start game");
+        return false;
     }
-    setInputs(player, inputs) {
-        this.world.setInputs(player, inputs);
-        if (!this.inputsHistory[player])
-            this.inputsHistory[player] = {};
-        this.inputsHistory[player][this.world.tick] = inputs;
+    setInputs(playerId, inputs) {
+        this.world.setInputs(playerId, inputs);
+        if (!this.inputsHistory[playerId])
+            this.inputsHistory[playerId] = {};
+        this.inputsHistory[playerId][this.world.tick] = inputs;
     }
+    // Exportation des données nécessaire de la partie
     export() {
-        return JSON.stringify({
+        return {
             players: this.players,
             smashers: this.smashers,
             map: this.map,
             inputsHistory: this.inputsHistory
-        });
+        };
+    }
+    // Mise à jour de la partie
+    update() {
+        switch (this.state) {
+            case Game.CHOOSE:
+                this.updateChoosingGame();
+                break;
+            case Game.COUNTDOWN:
+                this.updateCountdownGame();
+                break;
+            case Game.PLAY:
+                this.updatePlayingGame();
+                break;
+        }
+    }
+    updateChoosingGame() {
+        
+    }
+    updateCountdownGame() {
+        
+    }
+    updatePlayingGame() {
+        // Mise à jour du monde
+        this.world.update();
+    }
+    // Mise à jour périodique de la partie
+    startUpdating() {
+        this.stopUpdating();
+        this.updateIntervalId = setInterval(() => {
+            this.update();
+        }, World.TICK_DURATION);
+    }
+    stopUpdating() {
+        clearInterval(this.updateIntervalId);
     }
 }
 

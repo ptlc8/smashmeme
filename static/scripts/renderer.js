@@ -23,7 +23,7 @@ class SmashmemeRenderer {
         this.stop();
         var startT = Date.now();
         this.renderIntervalId = setInterval(() => {
-            this.renderGame(game, startT);
+            this.renderGame(game.game ? game.game : game, startT); // TODO : better
         }, 1000/fps);
     }
     stop() {
@@ -65,17 +65,18 @@ class SmashmemeRenderer {
         // Affichage du fond
         if (game.map) {
             this.ctx.translate(-this.camera.pos.x/6, -this.camera.pos.y/6);
-            this.renderModel(this.getModel(game.map.background), Date.now(), "idle");
+            this.renderModel(this.getModel(Smashmeme.maps[game.map].background), Date.now(), "idle");
             this.ctx.translate(this.camera.pos.x/6, this.camera.pos.y/6);
         }
         // Dessin
         if (game.debug) {
-            this.ctx.strokeStyle = "#00ff00";
-            this.ctx.strokeRect(-SmashmemeRenderer.WIDTH/2, -SmashmemeRenderer.HEIGHT/2, SmashmemeRenderer.WIDTH, SmashmemeRenderer.HEIGHT);
+            this.renderHitbox({t:"r",w:SmashmemeRenderer.WIDTH,h:SmashmemeRenderer.HEIGHT,x:0,y:0}, "#00ff00")
+            //this.ctx.strokeStyle = "#00ff00";
+            //this.ctx.strokeRect(-SmashmemeRenderer.WIDTH/2, -SmashmemeRenderer.HEIGHT/2, SmashmemeRenderer.WIDTH, SmashmemeRenderer.HEIGHT);
         }
         switch (game.state) {
             case Game.CHOOSE:
-                this.renderChoosingGame(game, 0);
+                this.renderChoosingGame(game);
                 break;
             case Game.COUNTDOWN:
                 this.renderCountdownGame(game);
@@ -92,25 +93,55 @@ class SmashmemeRenderer {
         this.updateCamera(game);
         this.renderWorld(game.world, game.debug);
     }
-    renderChoosingGame(game, startT) {
+    renderChoosingGame(game) {
         var w = SmashmemeRenderer.WIDTH;
         var h = SmashmemeRenderer.HEIGHT;
         var z = w/3200;
         // Affichage des persos
         let perL = 6; // = parseInt(w/400/z*3/4)
         this.ctx.translate(-w/2, 200-h/2);
-        for (let i = 0; i < Smashmeme.smashers.length/perL; i++) {
-            for (let j = 0; j < perL && j+perL*i < Smashmeme.smashers.length; j++) {
+        let smashers = Object.values(Smashmeme.smashers);
+        for (let i = 0; i < smashers.length/perL; i++) {
+            for (let j = 0; j < perL && j+perL*i < smashers.length; j++) {
                 this.ctx.translate(j*w/perL+w/perL/2, i*200);
                 this.ctx.scale(1/2, 1/2);
-                let smasher = Smashmeme.smashers[i*perL+j];
-                this.renderModel(this.getModel(smasher.model), Date.now()-startT, "idle" + (smasher.behaviour["idle"]&&smasher.behaviour["idle"].directionable?"-right":""));
+                let smasher = smashers[i*perL+j];
+                this.renderModel(this.getModel(smasher.model), Date.now()-game.stateStartTime, "idle" + (smasher.behaviour["idle"]&&smasher.behaviour["idle"].directionable?"-right":""));
                 this.renderText(smasher.name, 0, 64, 48, "#f5f5f5");
                 this.ctx.scale(2, 2);
                 this.ctx.translate(-j*w/perL-w/perL/2, -i*200);
             }
         }
-        this.ctx.translate(w/2, 0);
+        // Affichage des joueurs
+        this.ctx.translate(w/game.players.length/2, -200+h/2+3*h/8);
+        for (let i = 0; i < game.players.length; i++) {
+            let player = game.players[i];
+            this.ctx.translate(i*w/game.players.length, 0);
+            this.ctx.lineWidth = 4
+            this.ctx.fillStyle = "#ddd";
+            this.ctx.strokeStyle = "#222"
+            this.ctx.beginPath();
+            this.ctx.rect(-w/game.players.length/2, -h/8, w/game.players.length, h/4);
+            this.ctx.fill();
+            this.ctx.stroke();
+            if (game.smashers[player.id]) {
+                this.renderModel(this.getModel(game.smashers[player.id]), Date.now()-game.stateStartTime, "idle");
+                this.renderText(Smashmeme.smashers[game.smashers[player.id]].name, 0, h/32, h/20, "#000");
+            }
+            this.renderText("Player "+player.id, 0, 3*h/32, h/40, "#000");
+            this.ctx.translate(-i*w/game.players.length, 0);
+        }
+        this.ctx.translate(w/2-w/game.players.length/2, -3*h/8);
+        if (game.canStart()) {
+            this.ctx.fillStyle = "#222";
+            this.ctx.strokeStyle = "#ff0";
+            this.ctx.lineWidth = 12;
+            this.ctx.beginPath();
+            this.ctx.rect(-w, -h/8, 2*w, h/4);
+            this.ctx.fill();
+            this.ctx.stroke();
+            this.renderText("Ready for battle !", 0, 0, h/10, "#fff");
+        }
     }
     renderCountdownGame(game){
         var countdown = 3-parseInt((Date.now()-game.stateStartTime)/1000);
@@ -148,8 +179,8 @@ class SmashmemeRenderer {
         this.ctx.scale(1/this.camera.zoom, 1/this.camera.zoom);
     }
     // Affichage d'un texte
-    renderText(text="", x=0, y=0, size=10, color) {
-        this.ctx.textAlign = "center";
+    renderText(text="", x=0, y=0, size=10, color, textAlign="center") {
+        this.ctx.textAlign = textAlign;
         this.ctx.font = size + "px Arial";
         if (color) this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y+size/2.5);

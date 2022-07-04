@@ -1,7 +1,6 @@
 const express = require("express");
 const ws = require("ws");
-const smashmeme = require("./scripts/smashmeme");
-smashmeme.load();
+const SmashmemeServer = require("./server");
 
 // Create HTTP server
 const app = express();
@@ -28,13 +27,30 @@ app.get(`/*`, (req, res, next) => {
 
 // Create WS server
 const wsServer = new ws.Server({ noServer: true });
+const wsClients = {};
+var kId = 0;
+function wsSend(id, data) {
+    if (wsClients[id])
+        wsClients[id].send(JSON.stringify(data));
+}
+
+// Create Smashmeme server
+const smashmemeServer = new SmashmemeServer(wsSend);
+smashmemeServer.debug = true;
+
+// Listen for connections on WS server
 wsServer.on('connection', socket => {
+    socket.id = ++kId;
+    wsClients[socket.id] = socket;
+    smashmemeServer.onConnection(socket.id);
     socket.on('message', (data, isBinary) => {
         var message = isBinary ? data : data.toString();
-        console.log(message);
+        smashmemeServer.onReceive(socket.id, JSON.parse(message));
+    });
+    socket.on('close', socket => {
+        smashmemeServer.onDisconnection(socket.id);
     });
 });
-
 
 // Start HTTP Server
 const server = app.listen(port, () => {

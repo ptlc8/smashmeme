@@ -1,7 +1,6 @@
 class LocalGame extends Game {
     constructor() {
         super();
-        this.updateIntervalId = null;
         this.inputsManager = new InputsManager([
             ["Space","jump"],["KeyW","jump"],["GamepadButton3","jump"],["GamepadButton4","jump"],
             ["KeyW","up"],["-GamepadAxis1","up"],
@@ -17,47 +16,18 @@ class LocalGame extends Game {
             ["+GamepadAxis3","attack"],["+GamepadAxis3","down"],
             ["-GamepadAxis2","attack"],["-GamepadAxis2","left"]
         ]);
-        this.join("player");
+        this.join({ id:1, name:"player" });
     }
-
-    startUpdating() {
-        this.stopUpdating();
-        this.updateIntervalId = setInterval(() => {
-            this.update();
-        }, World.TICK_DURATION);
-    }
-    stopUpdating() {
-        clearInterval(this.updateIntervalId);
-    }
-
-    update() {
-        switch (game.state) {
-            case Game.CHOOSE:
-                this.updateChoosingGame(game);
-                break;
-            case Game.COUNTDOWN:
-                this.updateCountdownGame(game);
-                break;
-            case Game.PLAY:
-                this.updatePlayingGame(game);
-                break;
-        }
-    }
-    updateChoosingGame(game) {
-        
-    }
-    updateCountdownGame(game) {
-        
-    }
-    updatePlayingGame(game) {
+    // Override
+    updatePlayingGame() {
         // Condition de mort
-        if (game.world.smashers["player"].pos.y > 2000) {
+        if (this.world.smashers[1].pos.y > 2000) {
             window.location.href = "";
             clearInterval(this.updateIntervalId);
         }
         // Récupération des entrées
-        game.world.setInputs("player", this.inputsManager.getInputs());
-        // Mise à jour du monde
-        game.world.update();
+        this.world.setInputs(1, this.inputsManager.getInputs());
+        
+        super.updatePlayingGame();
     }
 }

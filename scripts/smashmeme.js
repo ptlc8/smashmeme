@@ -12,8 +12,16 @@ console.info("███╗█╗█╗███╗███╗█╗█╗█╗
 
 
 var Smashmeme = {
-    smashers: [],
-    maps: []
+    smashers: {},
+    maps: {},
+    getRandomSmasher() {
+        var smashers = Object.keys(Smashmeme.smashers);
+        return Smashmeme.smashers[smashers[Math.floor(Math.random()*smashers.length)]];
+    },
+    getRandomMap() {
+        var maps = Object.keys(Smashmeme.maps);
+        return Smashmeme.maps[maps[Math.floor(Math.random()*maps.length)]];
+    }
 };
 
 // fonction de chargement des données
@@ -21,19 +29,21 @@ Smashmeme.load = function() {
     return Promise.all([
             // Loading smashers
         Promise.all(["knuckle", "coffin-dancers", "buffed-doge", "glob", "raptor", "bongo-cat", "pepe"].map((smasher) => {
-            return Loader.loadBehaviourFromJSONFile(smasher+".json").then((loadedSmasher) => {
-                Smashmeme.smashers.push({name: smasher, model: smasher, behaviour: loadedSmasher});
+            return Loader.loadBehaviourFromJSONFile(smasher+".json").then(loadedSmasher => {
+                Smashmeme.smashers[smasher] = {name: smasher, id: smasher, model: smasher, behaviour: loadedSmasher};
             });
-        })).then(() => {
-            console.info("Smashers loaded : " + Smashmeme.smashers.length);
+        })).then(loadedSmashers => {
+            console.info("Smashers loaded : " + loadedSmashers.length);
         }),
 
         // Loading maps
         Promise.all(["nyan-cat-space", "crab-rave-island"].map((map) => {
-            return Loader.loadMapFromJSONFile(map+".json");
-        })).then((loadedMaps) => {
-            Smashmeme.maps.push(...loadedMaps);
-            console.info("Maps loaded : " + Smashmeme.maps.length);
+            return Loader.loadMapFromJSONFile(map+".json").then(loadedMap => {
+                Smashmeme.maps[map] = loadedMap;
+                Smashmeme.maps[map].id = map;
+            });
+        })).then(loadedMaps => {
+            console.info("Maps loaded : " + loadedMaps.length);
         })
     ]);
 };
