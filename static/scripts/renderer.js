@@ -6,6 +6,7 @@ class SmashmemeRenderer {
         Loader.loadModelFromJSONFile("no").then(model => this.models.no=model);
         Loader.loadModelFromJSONFile("loading").then(model => this.models.loading=model);
         this.camera = {zoom:1/2, zooms:[], pos:{x:0, y:0}};
+        this.renderRequestId = -1;
     }
 
     setCanvas(canvas) {
@@ -19,15 +20,15 @@ class SmashmemeRenderer {
         });
     }
 
-    start(game, fps=60) {
+    start(game) {
         this.stop();
-        var startT = Date.now();
-        this.renderIntervalId = setInterval(() => {
-            this.renderGame(game.game ? game.game : game, startT); // TODO : better
-        }, 1000/fps);
+        this.renderRequestId = requestAnimationFrame(() => {
+            this.renderGame(game.game ? game.game : game); // TODO : better
+            this.start(game);
+        });
     }
     stop() {
-        clearInterval(this.renderIntervalId);
+        cancelAnimationFrame(this.renderRequestId);
     }
     // Mettre à jour de la caméra
     updateCamera(game, entity=null) {
