@@ -15,17 +15,17 @@
         {
             "x": -400, "y": -250,
             "model":"nyan-small-platform",
-            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":50}
+            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":40}
         },
         {
             "x": 400, "y": -250,
             "model":"nyan-small-platform",
-            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":50}
+            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":40}
         },
         {
             "x": 0, "y": -500,
             "model":"nyan-small-platform",
-            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":50}
+            "hitbox": {"t":"r", "x":0, "y":0, "w":350, "h":40}
         }
     ],
     "spawns": [
