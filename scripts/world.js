@@ -68,7 +68,7 @@ class World {
                     }
                 }
                 // Saut
-                else if (inputs.jump.clicked && smasher.jumps < smasher.behaviour.jumps) {
+                else if (inputs.jump.clicked && smasher.jumps < smasher.jumpsLimit) {
                     action = "jump";
                     smasher.jumps++;
                 // Déplacement gauche/droite

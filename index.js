@@ -6,7 +6,7 @@ const SmashmemeServer = require("./server");
 const app = express();
 const port = 13028;
 
-var publicDirectories = ["models", "maps", "behaviours", "scripts"];
+var publicDirectories = ["models", "maps", "smashers", "scripts"];
 for (let publicDirectory of publicDirectories) {
     app.get(`/${publicDirectory}/*`, (req, res, next) => {
         res.sendFile(__dirname + "/" + publicDirectory + "/" + req.params[0], {}, function (err) {
@@ -36,7 +36,7 @@ function wsSend(id, data) {
 
 // Create Smashmeme server
 const smashmemeServer = new SmashmemeServer(wsSend);
-smashmemeServer.debug = true;
+smashmemeServer.debug = false;
 
 // Listen for connections on WS server
 wsServer.on('connection', socket => {
@@ -54,7 +54,7 @@ wsServer.on('connection', socket => {
 
 // Start HTTP Server
 const server = app.listen(port, () => {
-    console.log(`Server is running on port ${port}.`);
+    console.info(`Server is running on port ${port}.`);
 });
 
 server.on('upgrade', (request, socket, head) => {

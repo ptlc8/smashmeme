@@ -1,0 +1,59 @@
+{
+    "name": "Globglogabgalab",
+    "model": "glob",
+    "down": 3,
+    "jumpsLimit": 2,
+    "hitbox": {
+        "t": "c",
+        "x": 0,
+        "y": -105,
+        "r": 105
+    },
+    "behaviour": {
+        "idle": {
+    
+        },
+        "walk": {
+            "directionable": true
+        },
+        "walk-left": {
+            "move": {"x":-0.4, "y":0}
+        },
+        "walk-right": {
+            "move": {"x":0.4, "y":0}
+        },
+        "jump": {
+            "move": {"reset":true, "x":0, "y":-4}
+        },
+        "attack": {
+    
+        },
+        "attack-left": {
+            "in": 800
+        },
+        "attack-right": {
+    
+        },
+        "attack-up": {
+    
+        },
+        "attack-down": {
+    
+        },
+        "special": {
+    
+        },
+        "special-left": {
+    
+        },
+        "special-right": {
+            "in": 1000
+        },
+        "special-up": {
+    
+        },
+        "special-down": {
+    
+        }
+    }
+}

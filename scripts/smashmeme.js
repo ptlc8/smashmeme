@@ -27,10 +27,11 @@ var Smashmeme = {
 // fonction de chargement des données
 Smashmeme.load = function() {
     return Promise.all([
-            // Loading smashers
+        // Loading smashers
         Promise.all(["knuckle", "coffin-dancers", "buffed-doge", "glob", "raptor", "bongo-cat", "pepe"].map((smasher) => {
-            return Loader.loadBehaviourFromJSONFile(smasher+".json").then(loadedSmasher => {
-                Smashmeme.smashers[smasher] = {name: smasher, id: smasher, model: smasher, behaviour: loadedSmasher};
+            return Loader.loadSmasherFromJSONFile(smasher+".json").then(loadedSmasher => {
+                Smashmeme.smashers[smasher] = loadedSmasher;
+                Smashmeme.smashers[smasher].id = smasher;
             });
         })).then(loadedSmashers => {
             console.info("Smashers loaded : " + loadedSmashers.length);

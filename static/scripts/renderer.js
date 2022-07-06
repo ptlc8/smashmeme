@@ -170,8 +170,8 @@ class SmashmemeRenderer {
         for (let entity of world.entities) {
             this.ctx.translate(entity.pos.x, entity.pos.y);
             this.renderModel(this.getModel(entity.model), Date.now()-entity.action.start, entity.action.name);
-            if (debug && entity.behaviour.hitbox)
-                this.renderHitbox(entity.behaviour.hitbox, "#0088ff88", true);
+            if (debug && entity.hitbox)
+                this.renderHitbox(entity.hitbox, "#0088ff88", true);
             if (debug && entity.behaviour[entity.action.name].damage && entity.behaviour[entity.action.name].damage.hitbox)
                 this.renderHitbox(entity.behaviour[entity.action.name].damage.hitbox, "#ff000088", true);
             this.ctx.translate(-entity.pos.x, -entity.pos.y);

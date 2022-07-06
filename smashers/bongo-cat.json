@@ -1,0 +1,149 @@
+{
+    "name": "Bongo cat",
+    "model": "bongo-cat",
+    "down": 3,
+    "jumpsLimit": 4,
+    "hitbox": {
+        "t": "c",
+        "x": 0,
+        "y": -50,
+        "r": 50
+    },
+    "behaviour": {
+        "idle": {
+            "directionable": true
+        },
+        "idle-left": {},
+        "idle-right": {},
+        "walk": {
+            "directionable": true
+        },
+        "walk-left": {
+            "move": {"x":-0.5, "y":0}
+        },
+        "walk-right": {
+            "move": {"x":0.5, "y":0}
+        },
+        "jump": {
+            "move": {"reset":true, "x":0, "y":-2.5}
+        },
+        "attack": {
+
+        },
+        "attack-left": {
+            "in": 1000,
+            "damage": {
+                "at": 500,
+                "pos": {"x":-60, "y":0},
+                "hitbox": {
+                    "t": "v",
+                    "x": 0,
+                    "y": -55,
+                    "r": 160,
+                    "s": 135,
+                    "e": 225
+                },
+                "value": 5,
+                "kb": 10
+            }
+        },
+        "attack-right": {
+            "in": 1000,
+            "damage": {
+                "at": 500,
+                "pos": {"x":60, "y":0},
+                "hitbox": {
+                    "t": "v",
+                    "x": 0,
+                    "y": -55,
+                    "r": 160,
+                    "s": -45,
+                    "e": 45
+                },
+                "value": 5,
+                "kb": 10
+            }
+        },
+        "attack-up": {
+            "in": 1000,
+            "damage": {
+                "at": 500,
+                "pos": {"x":0, "y":-60},
+                "hitbox": {
+                    "t": "v",
+                    "x": 0,
+                    "y": -55,
+                    "r": 160,
+                    "s": -135,
+                    "e": -45
+                },
+                "value": 5,
+                "kb": 10
+            }
+        },
+        "attack-down": {
+            "in": 1000,
+            "damage": {
+                "at": 500,
+                "pos": {"x":0, "y":60},
+                "hitbox": {
+                    "t": "v",
+                    "x": 0,
+                    "y": -55,
+                    "r": 160,
+                    "s": 45,
+                    "e": 135
+                },
+                "value": 5,
+                "kb": 10
+            }
+        },
+        "special": {
+
+        },
+        "special-left": {
+            "in": 500,
+            "move": {"x":0.1, "y":0}
+        },
+        "special-right": {
+            "in": 500,
+            "move": {"x":-0.1, "y":0}
+        },
+        "special-up": {
+            "directionable":true
+        },
+        "special-up-right": {
+            "in": 500,
+            "move": {"x":0, "y":-0.3}
+        },
+        "special-up-left": {
+            "in": 500,
+            "move": {"x":0, "y":-0.3}
+        },
+        "special-down": {
+            "directionable":true
+        },
+        "special-down-right": {
+            "in": 1500,
+            "damage": {
+                "hitbox": {
+                    "t": "c",
+                    "x": 0,
+                    "y": -75,
+                    "r": 100
+                }
+            }
+        },
+        "special-down-left": {
+            "in": 1500,
+            "damage": {
+                "hitbox": {
+                    "t": "c",
+                    "x": 0,
+                    "y": -75,
+                    "r": 100
+                }
+            }
+        }
+    }
+}

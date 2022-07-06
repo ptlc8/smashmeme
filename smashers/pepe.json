@@ -1,0 +1,61 @@
+{
+    "name": "Pepe",
+    "model": "pepe",
+    "jumpsLimit": 2,
+    "down": 5,
+    "hitbox": {
+        "t": "c",
+        "x": 0,
+        "y": -50,
+        "r": 50
+    },
+    "behaviour": {
+        "idle": {
+            "directionable": true
+        },
+        "idle-left": {},
+        "idle-right": {},
+        "walk": {
+            "directionable": true
+        },
+        "walk-left": {
+            "move": {"x":-0.6, "y":0}
+        },
+        "walk-right": {
+            "move": {"x":0.6, "y":0}
+        },
+        "jump": {
+            "move": {"reset":true, "x":0, "y":-3}
+        },
+        "attack": {
+    
+        },
+        "attack-left": {
+            "in": 5000
+        },
+        "attack-right": {
+            "in": 5000
+        },
+        "attack-up": {
+    
+        },
+        "attack-down": {
+    
+        },
+        "special": {
+    
+        },
+        "special-left": {
+            
+        },
+        "special-right": {
+    
+        },
+        "special-up": {
+            "in": 1000
+        },
+        "special-down": {
+            "in": 1000
+        }
+    }
+}

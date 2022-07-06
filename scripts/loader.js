@@ -8,8 +8,8 @@ var Loader = {
 		return this.loadJSONFile(filePath);
 	},
 
-	loadBehaviourFromJSONFile(filePath, external=false) {
-		if (!external) filePath = "behaviours/" + filePath;
+	loadSmasherFromJSONFile(filePath, external=false) {
+		if (!external) filePath = "smashers/" + filePath;
 		return this.loadJSONFile(filePath);
 	},
 
