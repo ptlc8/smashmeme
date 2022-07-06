@@ -13,7 +13,7 @@ class SmashmemeRemote {
                 this.selfId = data.id;
                 break;
             case "join":
-                this.game = new RemoteGame(data.game, data => this.send({ type:"game", sub:data }));
+                this.game = new RemoteGame(data.game, this.selfId, data => this.send({ type:"game", sub:data }));
                 this.game.debug = this.debug;
                 break;
             case "leave":

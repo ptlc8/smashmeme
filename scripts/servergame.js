@@ -28,7 +28,7 @@ class ServerGame extends Game {
                 break;
             case "inputs":
                 if (this.setInputs(player.id, data.inputs))
-                    this.broadcast({ type:"inputs", playerId:player.id, inputs:data.inputs });
+                    this.broadcast({ type:"inputs", playerId:player.id, inputs:data.inputs, tick:this.world.tick, oldTick:data.tick });
                 break;
             default:
                 this.send(player.id, { error: "unknown data type: " + data.type });
@@ -42,6 +42,7 @@ class ServerGame extends Game {
         }
         return false;
     }
+    // Override
     leave(playerId) {
         if (super.leave(playerId)) {
             this.broadcast({ type:"leave", playerId:playerId });
@@ -49,9 +50,11 @@ class ServerGame extends Game {
         }
         return false;
     }
+    // Override
     start() {
         if (super.start()) {
             this.broadcast({ type:"start" });
+            console.log("Game "+this.id+" started");
             return true;
         }
         return false;

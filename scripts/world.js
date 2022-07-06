@@ -9,18 +9,30 @@ class World {
         this.tick = 0;
         this.smashers = {};
         this.entities = [];
-        this.inputs = {};
         for (const [index,playerId] of Object.entries(Object.keys(smashers))) {
-            this.inputs[playerId] = { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
             this.entities.push(this.smashers[playerId] = new SmasherEntity(Smashmeme.smashers[smashers[playerId]], this.map.spawns[index]));
         }
     }
-    update() {
+    clone() {
+        var clone = Object.create(Object.getPrototypeOf(this));
+        clone.map = this.map;
+        clone.tick = this.tick;
+        clone.smashers = {};
+        clone.entities = [];
+        for (let playerId in this.smashers) {
+            clone.entities.push(clone.smashers[playerId] = this.smashers[playerId].clone());
+        }
+        for (let i = clone.entities; i < this.entities.length; i++) {
+            clone.entities.push(entities[i].clone());
+        }
+        return clone;
+    }
+    update(playersInputs={}) {
         // Application des inputs
         for (let player in this.smashers) {
-            var inputs = this.inputs[player];
+            var inputs = playersInputs[player] || { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
             var smasher = this.smashers[player];
-            
+
             // Diminution du temps de cooldown s'il y en a un
             if (smasher.cooldown)
                 smasher.cooldown--;
@@ -125,9 +137,6 @@ class World {
             }
         }
         return dist;
-    }
-    setInputs(playerId, inputs) {
-        this.inputs[playerId] = inputs;
     }
 }
 

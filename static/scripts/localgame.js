@@ -26,8 +26,8 @@ class LocalGame extends Game {
             clearInterval(this.updateIntervalId);
         }
         // Récupération des entrées
-        this.world.setInputs(1, this.inputsManager.getInputs());
-        
+        this.setInputs(1, this.inputsManager.getInputs());
+        // Actualisation de la partie
         super.updatePlayingGame();
     }
 }

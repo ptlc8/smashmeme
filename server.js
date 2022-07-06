@@ -36,7 +36,7 @@ class SmashmemeServer {
         switch (data.type) {
             case "join":
                 if (!player.game) {
-                    let game = Object.values(this.games).filter(game => game.players.length < 4)[0];
+                    let game = Object.values(this.games).filter(game => game.players.length<4 && game.canJoin())[0];
                     if (!game) {
                         let gameId = this.gamesId++;
                         game = this.games[gameId] = new ServerGame(gameId, (id, data) => this.send(id, { type:"game", "sub":data }));

@@ -5,14 +5,12 @@ var remote;
 window.addEventListener("load", e => {
     Smashmeme.load().then(() => {
         var renderer = new SmashmemeRenderer(document.getElementById("aff"));
-        var websocket = new WebSocket("ws://localhost:13028");
+        var websocket = new WebSocket("ws://"+location.host);
         websocket.onopen = () => {
             remote = new SmashmemeRemote((data) => websocket.send(JSON.stringify(data)));
-            remote.debug = true;
+            //remote.debug = true;
             websocket.onmessage = (message) => remote.onReceive(JSON.parse(message.data));
             remote.join();
-            /*game.startUpdating();
-            game.setMap(Smashmeme.getRandomMap().id);*/
             renderer.start(remote);
         };
     });

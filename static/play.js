@@ -7,7 +7,6 @@ window.addEventListener("load", e => {
         var renderer = new SmashmemeRenderer(document.getElementById("aff"));
         game = new LocalGame();
         game.debug = false;
-        game.startUpdating();
         game.setMap(Smashmeme.getRandomMap().id);
         renderer.start(game);
     });
