@@ -1,9 +1,8 @@
 "use strict";
 var InputsManager = (function() {
-    // keys : [key,input][][], tableau de tableau de paires de touches (MouseButton1, KeyE, Space, GamepadButton5 etc. ; GamepadAxe1, MouseMoveX etc.) et d'entrée (jump, grab etc. ; ou +moveX, -moveX etc. pour les axes en 2 boutons)
     class InputsManager {
-        constructor(keys, multiplayer=false, htmlElement = document) {
-            this.keys = keys;
+        constructor(keys, htmlElement = document) {
+            this.keys = keys; // [key,input][][] : tableau de tableau de paires de touches (MouseButton1, KeyE, Space, GamepadButton5 etc. ; GamepadAxe1, MouseMoveX etc.) et d'entrée (jump, grab etc. ; ou +moveX, -moveX etc. pour les axes en 2 boutons)
             this.keyboard = {};
             this.mouse = {buttons:[], move:[0,0], grabmove:[0,0]};
             this.inputs = {};
@@ -22,17 +21,11 @@ var InputsManager = (function() {
             htmlElement.addEventListener("keydown", (e) => {
                 if (this.keyboard[e.code]) return;
                 this.onKey("keyboard", e.code, 1, false);
-                //for (const key of this.keys) {
-                    //if (key[0] == e.code)
-                        this.keyboard[e.code] = true;
-                //}
+                this.keyboard[e.code] = true;
             });
             htmlElement.addEventListener("keyup", (e) => {
                 this.onKey("keyboard", e.code, 0, false);
-                //for (const key of this.keys) {
-                    //if (key[0] == e.code)
-                        this.keyboard[e.code] = false;
-                //}
+                this.keyboard[e.code] = false;
             });
             // souris
             htmlElement.addEventListener("mousedown", (e) => {
@@ -46,16 +39,14 @@ var InputsManager = (function() {
             htmlElement.addEventListener("mousemove", (e) => {
                 this.onKey("mouse", (e.buttons%2==1?"Grab":"")+"MoveX", e.movementX/50, true);
                 this.onKey("mouse", (e.buttons%2==1?"Grab":"")+"MoveY", e.movementY/50, true);
-                //for (let key of this.keys) {
-                    if (e.buttons % 2 != 1/* && key[0] == "MouseMoveX"*/)
-                        this.mouse.move[0] += e.movementX / 50;
-                    if (e.buttons % 2 != 1/* && key[0] == "MouseMoveY"*/)
-                        this.mouse.move[1] += e.movementY / 50;
-                    if (e.buttons % 2 == 1/* && key[0] == "MouseGrabMoveX"*/)
-                        this.mouse.grabmove[0] += e.movementX / 50;
-                    if (e.buttons % 2 == 1/* && key[0] == "MouseGrabMoveY"*/)
-                        this.mouse.grabmove[1] += e.movementY / 50;
-                //}
+                if (e.buttons % 2 != 1)
+                    this.mouse.move[0] += e.movementX / 50;
+                if (e.buttons % 2 != 1)
+                    this.mouse.move[1] += e.movementY / 50;
+                if (e.buttons % 2 == 1)
+                    this.mouse.grabmove[0] += e.movementX / 50;
+                if (e.buttons % 2 == 1)
+                    this.mouse.grabmove[1] += e.movementY / 50;
             });
             // manette
             window.addEventListener("gamepadconnected", (e) => {
@@ -237,12 +228,16 @@ var InputsManager = (function() {
 
     // static
     var vibrate = function(duration=200, strongMagnitude=1.0, weakMagnitude=1.0) {
-        var gamepad = (navigator.getGamepads?navigator.getGamepads():[])[0];
-        if (gamepad) {
-            if (gamepad.vibrationActuator)
-                gamepad.vibrationActuator.playEffect("dual-rumble", {duration,strongMagnitude,weakMagnitude});
-            if (gamepad.hapticActuators)
-                gamepad.hapticActuators[0].pulse(strongMagnitude, duration);
+        if (navigator.getGamepads) {
+            for (let gamepad of navigator.getGamepads()) {
+                if (!gamepad) continue;
+                if (gamepad.vibrationActuator)
+                    gamepad.vibrationActuator.playEffect("dual-rumble", {duration,strongMagnitude,weakMagnitude});
+                if (gamepad.hapticActuators)
+                    gamepad.hapticActuators[0].pulse(strongMagnitude, duration);
+            }
+        } else if (navigator.vibrate) {
+            navigator.vibrate(duration)
         }
     };
     InputsManager.vibrate = vibrate;

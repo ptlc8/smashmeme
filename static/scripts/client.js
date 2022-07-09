@@ -16,7 +16,8 @@ class SmashmemeClient {
     onInput(index, input, value) {
         if (this.game) {
             if (this.game.canStart() && input=="jump" && value!=0) {
-                this.game.start();
+                if (this.game.start())
+                    InputsManager.vibrate(400);
             }
             if (typeof RemoteGame != "undefined" && this.game instanceof RemoteGame) {
                 this.game.onInput(this.selfId, input, value);
