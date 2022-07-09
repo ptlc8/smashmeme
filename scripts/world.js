@@ -9,8 +9,10 @@ class World {
         this.tick = 0;
         this.smashers = {};
         this.entities = [];
+        this.playerInputs = {};
         for (const [index,playerId] of Object.entries(Object.keys(smashers))) {
             this.entities.push(this.smashers[playerId] = new SmasherEntity(Smashmeme.smashers[smashers[playerId]], this.map.spawns[index]));
+            this.playerInputs[playerId] = {left:{}, right:{}, up:{}, down:{}, jump:{}, attack:{}, special:{}, shield:{}};
         }
     }
     clone() {
@@ -25,12 +27,34 @@ class World {
         for (let i = clone.entities; i < this.entities.length; i++) {
             clone.entities.push(entities[i].clone());
         }
+        clone.playerInputs = {};
+        for (let playerId in this.playerInputs) {
+            clone.playerInputs[playerId] = {};
+            for (let tick in this.playerInputs[playerId]) {
+                clone.playerInputs[playerId][tick] = this.playerInputs[playerId][tick]; // TODO: not exact
+            }
+        }
         return clone;
     }
-    update(playersInputs={}) {
+    update(playersNewInputs={}) {
+        // Mise à jour des inputs
+        for (let playerId in this.playerInputs) {
+            for (let input of ["left", "right", "up", "down", "jump", "attack", "special", "shield"]) {
+                this.playerInputs[playerId][input].clicked = false;
+                if (!playersNewInputs[playerId] || !(input in playersNewInputs[playerId])) continue;
+                var value = playersNewInputs[playerId][input];
+                if (!this.playerInputs[playerId][input])
+                    this.playerInputs[playerId][input] = {pressed:value!=0, clicked:value!=0, value};
+                else {
+                    this.playerInputs[playerId][input].clicked = !this.playerInputs[playerId][input].pressed && value!=0;
+                    this.playerInputs[playerId][input].pressed = value!=0;
+                    this.playerInputs[playerId][input].value = value;
+                }
+            }
+        }
         // Application des inputs
         for (let player in this.smashers) {
-            var inputs = playersInputs[player] || { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
+            var inputs = this.playerInputs[player] || { right: {}, left: {}, up: {}, down: {}, jump: {}, attack: {}, special: {}, shield: {} };
             var smasher = this.smashers[player];
 
             // Diminution du temps de cooldown s'il y en a un
@@ -72,7 +96,7 @@ class World {
                     action = "jump";
                     smasher.jumps++;
                 // Déplacement gauche/droite
-                } else if (inputs.right.pressed != inputs.left.pressed) {
+                } else if (!inputs.right.pressed != !inputs.left.pressed) {
                     smasher.direction = inputs.right.pressed ? "right" : "left";
                     action = "walk" + (smasher.behaviour["walk"].directionable ? "-" + smasher.direction : "");
                 // Inactivité

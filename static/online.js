@@ -1,17 +1,17 @@
 "use strict";
 
-var remote;
+var client;
 
 window.addEventListener("load", e => {
-    Smashmeme.load().then(() => {
+    client = new SmashmemeClient();
+    client.load().then(() => {
         var renderer = new SmashmemeRenderer(document.getElementById("aff"));
         var websocket = new WebSocket("ws://"+location.host);
         websocket.onopen = () => {
-            remote = new SmashmemeRemote((data) => websocket.send(JSON.stringify(data)));
-            //remote.debug = true;
-            websocket.onmessage = (message) => remote.onReceive(JSON.parse(message.data));
-            remote.join();
-            renderer.start(remote);
+            client.startRemote((data) => websocket.send(JSON.stringify(data)));
+            websocket.onmessage = (message) => client.onReceive(JSON.parse(message.data));
+            client.join();
+            renderer.start(client);
         };
     });
 });
@@ -21,21 +21,21 @@ document.getElementById("aff").addEventListener("click", (e) => {
     var x = (e.clientX - e.target.width/2) / ratio;
     var y = (e.clientY - e.target.height/2) / ratio;
     var w = SmashmemeRenderer.WIDTH, h = SmashmemeRenderer.HEIGHT;
-    if (!remote.game) return;
+    if (!client.game) return;
     let smashers = Object.keys(Smashmeme.smashers);
-    switch (remote.game.state) {
+    switch (client.game.state) {
         case Game.CHOOSE:
             let perL = 6;
             if (e.button == 0) {
                 // Choix du smasher
                 let index = Math.floor((y+h/2-24)/200) * perL + Math.floor((x+w/2)/w*perL);
                 if (0 <= index && index < smashers.length) {
-                    remote.game.choose(remote.selfId, remote.game.smashers[remote.selfId]==smashers[index] ? null : smashers[index]);
+                    client.game.choose(client.selfId, client.game.smashers[client.selfId]==smashers[index] ? null : smashers[index]);
                     return;
                 }
                 // Lancement du match
-                if (-h/8 < y && y < h/8 && remote.game.canStart()) {
-                    remote.game.start();
+                if (-h/8 < y && y < h/8 && client.game.canStart()) {
+                    client.game.start();
                 }
             }
             break;

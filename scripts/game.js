@@ -9,7 +9,7 @@ class Game {
         this.smashers = {};
         this.map = null;
         this.world = null;
-        this.inputs = {}; // {player: {tick1: {inputs}, tick2: {inputs}}}
+        this.inputs = {}; // {player: {tick1: {input: value}, tick2: {input2: value}}}
         this.debug = false;
         this.stateStartTime = Date.now();
         this.updateIntervalId = null;
@@ -17,8 +17,15 @@ class Game {
     get isPlaying() {
         return this.world !== null;
     }
-    canJoin() {
-        return this.state == Game.CHOOSE;
+    canJoin(playerId=null) {
+        if (this.state != Game.CHOOSE)
+            return false;
+        if (playerId!=null) {
+            for (var player of this.players)
+                if (player.id == playerId)
+                    return false;
+        }
+        return true;
     }
     join(player) {
         if (this.canJoin()) {
@@ -44,7 +51,7 @@ class Game {
         return true;
     }
     canStart() {
-        if (this.state!=Game.CHOOSE || this.map==null)
+        if (this.state!=Game.CHOOSE || this.map==null || this.players.length<1)
             return false;
         for (var player of this.players) {
             if (!this.smashers[player.id])
@@ -81,11 +88,20 @@ class Game {
         }
         return lastTick;
     }
-    // Définir les entrées d'un joueur à un tick donné
-    setInputs(playerId, inputs, tick=this.world.tick) {
+    getInputs() {
+        var inputs = {};
+        for (var player of this.players) {
+            inputs[player.id] = (this.inputs[player.id] || {})[this.world.tick];
+        }
+        return inputs;
+    }
+    // Lors d'un évent entrées d'un joueur à un tick donné
+    onInput(playerId, input, value, tick=this.world ? this.world.tick : 0) {
         if (!this.inputs[playerId])
             this.inputs[playerId] = {};
-        this.inputs[playerId][tick] = inputs;
+        if (!this.inputs[playerId][tick])
+            this.inputs[playerId][tick] = {};
+        this.inputs[playerId][tick][input] = value;
         return true;
     }
     // Exportation des données nécessaire de la partie
@@ -119,7 +135,7 @@ class Game {
     }
     updatePlayingGame() {
         // Mise à jour du monde avec les entrées des joueurs
-        this.world.update(this.getLastInputs(this.world.tick));
+        this.world.update(this.getInputs());
     }
     // Mise à jour périodique de la partie
     startUpdating() {

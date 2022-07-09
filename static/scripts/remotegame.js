@@ -8,22 +8,6 @@ class RemoteGame extends Game {
         this.inputsHistory = exportedGame.inputsHistory;
         this.selfId = selfId;
         this.send = sendFunction;
-        this.inputsManager = new InputsManager([
-            ["Space","jump"],["KeyW","jump"],["GamepadButton3","jump"],["GamepadButton4","jump"],
-            ["KeyW","up"],["-GamepadAxis1","up"],
-            ["KeyD","right"],["+GamepadAxis0","right"],
-            ["KeyS","down"],["+GamepadAxis1","down"],
-            ["KeyA","left"],["-GamepadAxis0","left"],
-            ["KeyO","attack"],["GamepadButton1","attack"],
-            ["KeyK","special"],["GamepadButton0","special"],
-            ["Semicolon","shield"],
-            ["ShiftLeft","shield"],
-            ["-GamepadAxis3","attack"],["-GamepadAxis3","up"],
-            ["+GamepadAxis2","attack"],["+GamepadAxis2","right"],
-            ["+GamepadAxis3","attack"],["+GamepadAxis3","down"],
-            ["-GamepadAxis2","attack"],["-GamepadAxis2","left"]
-        ]);
-        this.lastInputs = null;
         this.worldSaves = [];
     }
     onReceive(data) {
@@ -39,7 +23,7 @@ class RemoteGame extends Game {
             case "start":
                 return super.start();
             case "inputs":
-                super.setInputs(data.playerId, data.inputs, data.tick);
+                super.onInput(data.playerId, data.input, data.value, data.tick);
                 if (data.tick < this.world.tick)
                     this.rollback(data.tick);
                 break;
@@ -70,19 +54,14 @@ class RemoteGame extends Game {
         this.send({ type: "start" });
     }
     // Override
-    setInputs(_playerId, inputs, _tick) {
+    onInput(_playerId, input, value, _tick) {
         var tick = this.world.tick;
-        // Si les entrées n'ont pas changées, on ne les renvoie pas
-        if (JSON.stringify(this.lastInputs) == JSON.stringify(inputs)) // TODO: find better way to compare
-            return;
-        this.lastInputs = inputs;
         //this.localInputs[tick] = JSON.parse(JSON.stringify(inputs)); // TODO : find better way to copy
-        this.send({ type: "inputs", inputs: this.lastInputs, tick });
+        this.send({ type: "inputs", input, value, tick });
+        return true;
     }
     // Override
     updatePlayingGame() {
-        // Récupération des entrées
-        this.setInputs(this.selfId, this.inputsManager.getInputs());
         super.updatePlayingGame();
         // Une sauvegarde par seconde
         if (this.world.tick%parseInt(1000/World.TICK_DURATION)==0) {
@@ -91,7 +70,7 @@ class RemoteGame extends Game {
         // On garde que 10 secondes de sauvegarde
         if (this.worldSaves.length > 10) {
             this.worldSaves.shift();
-            }
+        }
     }
     // Rollback du monde à un tick donné
     rollback(tick) {

@@ -1,32 +1,21 @@
 class LocalGame extends Game {
     constructor() {
         super();
-        this.inputsManager = new InputsManager([
-            ["Space","jump"],["KeyW","jump"],["GamepadButton3","jump"],["GamepadButton4","jump"],
-            ["KeyW","up"],["-GamepadAxis1","up"],
-            ["KeyD","right"],["+GamepadAxis0","right"],
-            ["KeyS","down"],["+GamepadAxis1","down"],
-            ["KeyA","left"],["-GamepadAxis0","left"],
-            ["KeyO","attack"],["GamepadButton1","attack"],
-            ["KeyK","special"],["GamepadButton0","special"],
-            ["Semicolon","shield"],
-            ["ShiftLeft","shield"],
-            ["-GamepadAxis3","attack"],["-GamepadAxis3","up"],
-            ["+GamepadAxis2","attack"],["+GamepadAxis2","right"],
-            ["+GamepadAxis3","attack"],["+GamepadAxis3","down"],
-            ["-GamepadAxis2","attack"],["-GamepadAxis2","left"]
-        ]);
-        this.join({ id:1, name:"player" });
+    }
+    // Override
+    onInput(playerId, input, value) {
+        if (this.canJoin(playerId)) {
+            this.join({ id: playerId, name: "player"+playerId });
+        }
+        super.onInput(playerId, input, value);
     }
     // Override
     updatePlayingGame() {
         // Condition de mort
-        if (this.world.smashers[1].pos.y > 2000) {
+        if (this.world.smashers[0].pos.y > 2000) {
             window.location.href = "";
             clearInterval(this.updateIntervalId);
         }
-        // Récupération des entrées
-        this.setInputs(1, this.inputsManager.getInputs());
         // Actualisation de la partie
         super.updatePlayingGame();
     }

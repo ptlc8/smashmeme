@@ -27,8 +27,8 @@ class ServerGame extends Game {
                 this.start();
                 break;
             case "inputs":
-                if (this.setInputs(player.id, data.inputs))
-                    this.broadcast({ type:"inputs", playerId:player.id, inputs:data.inputs, tick:this.world.tick, oldTick:data.tick });
+                if (this.onInput(player.id, data.input, data.value))
+                    this.broadcast({ type:"inputs", playerId:player.id, input:data.input, value:data.value, tick:this.world.tick, oldTick:data.tick });
                 break;
             default:
                 this.send(player.id, { error: "unknown data type: " + data.type });
@@ -59,7 +59,6 @@ class ServerGame extends Game {
         }
         return false;
     }
-
 }
 
 if (typeof exports==="object" && typeof module!=="undefined")

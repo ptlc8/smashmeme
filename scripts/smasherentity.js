@@ -21,7 +21,7 @@ class SmasherEntity extends Entity {
         clone.direction = this.direction;
         clone.spd = {x:this.spd.x, y:this.spd.y};
         clone.acc = {x:this.acc.x, y:this.acc.y};
-        this.behaviour = smasher.behaviour;
+        clone.behaviour = this.behaviour;
         clone.jumps = this.jumps;
         clone.cooldown = this.cooldown;
         clone.specialUp = this.specialUp;
