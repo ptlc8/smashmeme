@@ -202,7 +202,7 @@ var InputsManager = (function() {
                         if (keyEntry[0] == "+"+device+key)
                             this.onInput(index, keyEntry[1], Math.max(0,value));
                         if (keyEntry[0] == "-"+device+key)
-                            this.onInput(index, keyEntry[1], Math.min(0,value));
+                            this.onInput(index, keyEntry[1], -Math.min(0,value));
                     }
         }
         scan(scanForAxis=false) {

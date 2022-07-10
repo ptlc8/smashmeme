@@ -104,12 +104,18 @@ class SmashmemeRenderer {
         let smashers = Object.values(Smashmeme.smashers);
         for (let i = 0; i < smashers.length/perL; i++) {
             for (let j = 0; j < perL && j+perL*i < smashers.length; j++) {
+                let smasher = smashers[i*perL+j];
                 this.ctx.translate(j*w/perL+w/perL/2, i*200);
                 this.ctx.scale(1/2, 1/2);
-                let smasher = smashers[i*perL+j];
                 this.renderModel(this.getModel(smasher.model), Date.now()-game.stateStartTime, "idle" + (smasher.behaviour["idle"]&&smasher.behaviour["idle"].directionable?"-right":""));
-                this.renderText(smasher.name, 0, 64, 48, "#f5f5f5");
                 this.ctx.scale(2, 2);
+                this.renderText(smasher.name, 0, 32, 24, "#f5f5f5");
+                for (let player of game.players)
+                    if (game.selectingSmasher[player.id] == i*perL+j) {
+                        this.ctx.strokeStyle = SmashmemeRenderer.COLORS[player.id%SmashmemeRenderer.COLORS.length];
+                        this.ctx.lineWidth = 8;
+                        this.ctx.strokeRect(-w/perL/2+4, -146, w/perL-8, 192);
+                    }
                 this.ctx.translate(-j*w/perL-w/perL/2, -i*200);
             }
         }
@@ -118,8 +124,8 @@ class SmashmemeRenderer {
         for (let i = 0; i < game.players.length; i++) {
             let player = game.players[i];
             this.ctx.translate(i*w/game.players.length, 0);
-            this.ctx.lineWidth = 4
-            this.ctx.fillStyle = "#ddd";
+            this.ctx.lineWidth = 4;
+            this.ctx.fillStyle = SmashmemeRenderer.COLORS[i%SmashmemeRenderer.COLORS.length];
             this.ctx.strokeStyle = "#222"
             this.ctx.beginPath();
             this.ctx.rect(-w/game.players.length/2, -h/8, w/game.players.length, h/4);
@@ -305,3 +311,4 @@ class SmashmemeRenderer {
 
 SmashmemeRenderer.WIDTH = 1620;
 SmashmemeRenderer.HEIGHT = 1000;
+SmashmemeRenderer.COLORS = ["#4488ff", "#ff4488", "#88ff44", "#ffff00", "#00ffff", "#ff00ff", "#ff8844"];

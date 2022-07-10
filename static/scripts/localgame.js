@@ -1,6 +1,7 @@
 class LocalGame extends Game {
     constructor() {
         super();
+        this.selectingSmasher = {};
     }
     // Override
     onInput(playerId, input, value) {
@@ -12,11 +13,15 @@ class LocalGame extends Game {
     // Override
     updatePlayingGame() {
         // Condition de mort
-        if (this.world.smashers[0].pos.y > 2000) {
-            window.location.href = "";
-            clearInterval(this.updateIntervalId);
-        }
+        for (let smasher of Object.values(this.world.smashers))
+            if (smasher.pos.y > 2000)
+                smasher.pos = {x:0, y:-500};
         // Actualisation de la partie
         super.updatePlayingGame();
+    }
+    // Override
+    join(player) {
+        super.join(player);
+        this.selectingSmasher[player.id] = 0;
     }
 }

@@ -14,16 +14,26 @@ class SmashmemeClient {
         return Smashmeme.load();
     }
     onInput(index, input, value) {
+        var playerId = typeof RemoteGame != "undefined" && this.game instanceof RemoteGame ? this.selfId : index;
         if (this.game) {
             if (this.game.canStart() && input=="jump" && value!=0) {
                 if (this.game.start())
                     InputsManager.vibrate(400);
             }
-            if (typeof RemoteGame != "undefined" && this.game instanceof RemoteGame) {
-                this.game.onInput(this.selfId, input, value);
-            } else {
-                this.game.onInput(index, input, value);
+            if (this.game.state == Game.CHOOSE) {
+                if (input=="left" && value>0.9)
+                    this.game.selectingSmasher[playerId] += Object.values(Smashmeme.smashers).length-1;
+                if (input=="right" && value>0.9)
+                    this.game.selectingSmasher[playerId]++;
+                if (input=="up" && value>0.9)
+                    this.game.selectingSmasher[playerId] += Object.values(Smashmeme.smashers).length-6;
+                if (input=="down" && value>0.9)
+                    this.game.selectingSmasher[playerId] += 6;
+                this.game.selectingSmasher[playerId] %= Object.values(Smashmeme.smashers).length;
+                if (input=="attack" && value!=0)
+                    this.game.choose(playerId, Object.keys(Smashmeme.smashers)[this.game.selectingSmasher[playerId]]);
             }
+            this.game.onInput(playerId, input, value);
         }
     }
     // Only for local game
