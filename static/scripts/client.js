@@ -32,6 +32,8 @@ class SmashmemeClient {
                 this.game.selectingSmasher[playerId] %= Object.values(Smashmeme.smashers).length;
                 if (input=="attack" && value!=0)
                     this.game.choose(playerId, Object.keys(Smashmeme.smashers)[this.game.selectingSmasher[playerId]]);
+                if (input=="special")
+                    return this.game.leave(playerId);
             }
             this.game.onInput(playerId, input, value);
         }

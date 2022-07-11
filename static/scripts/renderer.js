@@ -20,11 +20,11 @@ class SmashmemeRenderer {
         });
     }
 
-    start(game) {
+    start(client) {
         this.stop();
         this.renderRequestId = requestAnimationFrame(() => {
-            this.renderGame(game.game ? game.game : game); // TODO : better
-            this.start(game);
+            this.renderClient(client);
+            this.start(client);
         });
     }
     stop() {
@@ -54,11 +54,24 @@ class SmashmemeRenderer {
         if (this.camera.zooms.length > 10) this.camera.zooms.shift();
         this.camera.zoom = (this.camera.zooms[0]+this.camera.zooms[this.camera.zooms.length-1])/2;
     }
+    // Affichage d'un client (menu ou jeu)
+    renderClient(client) {
+        // Nettoyage
+        if (this.ctx.resetTransform) this.ctx.resetTransform();
+        this.ctx.clearRect(0, 0, this.cvs.width, this.cvs.height);
+        // Rendu
+        if (client.game) {
+            this.renderGame(client.game);
+        } else {
+            this.renderMainMenu(client);
+        }
+    }
+    // Affichage du menu principal
+    renderMainMenu(client) {
+
+    }
     // Affichage d'une partie
     renderGame(game) {
-        // Nettoyage
-        if (this.ctx.resetTransform) this.ctx.resetTransform(); // TODO : if not supported -> fail
-        this.ctx.clearRect(0, 0, this.cvs.width, this.cvs.height);
         // Centrage et normalisation
         var ratio = Math.min(this.cvs.width/SmashmemeRenderer.WIDTH, this.cvs.height/SmashmemeRenderer.HEIGHT);
         this.ctx.translate(this.cvs.width/2, this.cvs.height/2);
@@ -138,7 +151,11 @@ class SmashmemeRenderer {
             this.renderText("Player "+player.id, 0, 3*h/32, h/40, "#000");
             this.ctx.translate(-i*w/game.players.length, 0);
         }
-        this.ctx.translate(w/2-w/game.players.length/2, -3*h/8);
+        this.ctx.translate(-w/game.players.length/2, +200-h/2-3*h/8);
+        this.ctx.translate(w/2, -200+h/2);
+        if (game.players.length == 0) {
+            this.renderText("Touch your keyboard or your gamepad to join", w/2, 3*h/4, 42, "#fff");
+        }
         if (game.canStart()) {
             this.ctx.fillStyle = "#222";
             this.ctx.strokeStyle = "#ff0";
