@@ -3,10 +3,12 @@ var model;
 var zoom = 1;
 var x = 0;
 var y = 0;
+var renderer;
 
 window.addEventListener("load", async () => {
 	var cvs = document.getElementById("preview");
 	cvs.width = cvs.height = 600;
+	renderer = new SmashmemeRenderer(cvs);
 	cvs.addEventListener("wheel", (e) => {
 	    e.preventDefault();
 	    zoom *= Math.pow(2, -e.deltaY*0.001);
@@ -19,11 +21,11 @@ window.addEventListener("load", async () => {
 		} else
 			e.target.style.cursor = "grab";
 	});
-	background = newModel({
+	background = SmashmemeRenderer.newModel({
 		img: "grid.png"
 	});
     var urlParams = new URLSearchParams(window.location.search);
-    model = urlParams.has("from") ? await loadModelFromJSONFile(urlParams.get("from")+".json") : newModel({});
+    model = urlParams.has("from") ? await Loader.loadModelFromJSONFile(urlParams.get("from")) : SmashmemeRenderer.newModel({});
 	if (!urlParams.has("from")) loadFromSave();
 	refreshEditing();
 	refreshJSON();
@@ -37,8 +39,8 @@ window.addEventListener("load", async () => {
 		ctx.clearRect(0, 0, cvs.width, cvs.height);
 		ctx.translate(300+x, 400+y);
 		ctx.scale(zoom, zoom);
-		renderModel(ctx, background, Date.now()-startT, "default");
-		renderModel(ctx, model, Date.now()-startT, animSelect.value);
+		renderer.renderModel(background, Date.now()-startT, "default");
+		renderer.renderModel(model, Date.now()-startT, animSelect.value);
 		ctx.scale(1/zoom, 1/zoom);
 		ctx.translate(-300-x, -400-y);
 	}, 1000/30);
@@ -158,8 +160,8 @@ function refreshEditingModel(fieldset, model) {
 		if (fieldset.children[i].tagName.toLowerCase() != "legend")
 			fieldset.removeChild(fieldset.children[i]);
 	var imageInput = newInput("text", model.img, "img", "URL de l'image");
-	var imagePreview = newImage(getImage(model.img, true).src);
-	imageInput.addEventListener("change", () => imagePreview.src = getImage(imageInput.value, true).src);
+	var imagePreview = SmashmemeRenderer.createImage(renderer.getImage(model.img, true).src);
+	imageInput.addEventListener("change", () => imagePreview.src = renderer.getImage(imageInput.value, true).src);
 	fieldset.appendChild(newFieldSet("Image", "img", "linearable", [imageInput, imagePreview]));
 	fieldset.appendChild(newFieldSet("Derrière le parent ?", "bh", "linearable", [newInput("checkbox", model.bh, "bh")]));
 	fieldset.appendChild(newFieldSet("Origine", "origin", "model", [newInput("number", model.origin.x, "x", "X"), newInput("number", model.origin.y, "y", "Y")]));
@@ -196,7 +198,7 @@ function refreshEditingModel(fieldset, model) {
 	}
 	fieldset.appendChild(pinneds); 
 	addAddButton(pinneds, "Ajouter un enfant", () => {
-		let o = newModel({});
+		let o = SmashmemeRenderer.newModel({});
 		let pinned = newFieldSet("Enfant", "", "object");
 		refreshEditingModel(pinned, o);
 		pinneds.appendChild(pinned);
@@ -266,7 +268,7 @@ function loadImageFromUpload(fileInput) {
 	if (!fileInput.files || !fileInput.files[0]) return;
 	let reader = new FileReader();
 	reader.addEventListener("load", () => {
-		images["assets/"+fileInput.files[0].name] = newImage(reader.result);
+		images["assets/"+fileInput.files[0].name] = SmashmemeRenderer.createImage(reader.result);
 		alert("L'image a bien été chargée et est utilisable avec l'URL : " + fileInput.files[0].name)
 		console.info("Image got from file : " + fileInput.files[0].name);
 	});
@@ -354,7 +356,7 @@ function convertToGif(data) { // width, height, duration, delay, quality, backgr
 		}
 		ctx.translate(cvs.width/2+x, 2*cvs.height/3+y);
 		ctx.scale(zoom, zoom);
-		renderModel(ctx, model, t, animName);
+		renderer.renderModel(model, t, animName);
 		ctx.scale(1/zoom, 1/zoom);
 		ctx.translate(-cvs.width/2+x, -2*cvs.height/3+y);
 		gif.addFrame(cvs, {delay:data.delay||30});
