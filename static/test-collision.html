@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>#cvs{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}</style>
+    </head>
+    <body>
+        <div>Yellow square indicate collision</div>
+        <div>Click to change shapes</div>
+        <canvas id="cvs" width="400" height="400"></canvas>
+        <script src="scripts/collision.js"></script>
+        <script>
+var a = 0;
+var tests = [
+    [{t:"c",r:80,x:0,y:0},{t:"c",r:100,x:0,y:0}],
+    [{t:"r",w:80,x:20,y:0,h:10},{t:"r",w:50,h:40,x:0,y:0}],
+    [{t:"c",r:20,x:0,y:0},{t:"v",x:20,y:0,r:60,s:45,e:225}],
+    [{t:"c",r:20,x:0,y:0},{t:"v",x:20,y:0,r:60,s:135,e:315}],
+    [{t:"c",r:20,x:0,y:0},{t:"v",x:20,y:0,r:60,s:15,e:270}],
+    [{t:"c",r:20,x:0,y:0},{t:"v",x:20,y:0,r:60,s:0,e:90}],
+    [{t:"r",w:90,h:30,x:0,y:0},{t:"c",x:0,y:0,r:55}]
+];
+var shape1 = tests[0][0];
+var shape2 = tests[0][1];
+var x = 0, y = 0;
+var ctx;
+window.onload = () => {
+    var cvs = document.getElementById("cvs");
+    ctx = cvs.getContext("2d", { alpha: false });
+    cvs.addEventListener("mousemove", e => {
+        console.log(e)
+        x = e.offsetX;
+        y = e.offsetY;
+    });
+    cvs.addEventListener("click", e => {
+        a++;
+        shape1 = tests[a%tests.length][0];
+        shape2 = tests[a%tests.length][1];
+    });
+    renderLoop();
+}
+function renderLoop() {
+    requestAnimationFrame(() => {
+        this.ctx.clearRect(0,0,400,400);
+        this.ctx.fillStyle = "yellow";
+        if (Collision.has({x:200,y:200},shape1,{x,y},shape2))
+            this.ctx.fillRect(0,0,40,40);
+        this.ctx.translate(200, 200);
+        renderHitbox(shape1, "#ff000088", true);
+        this.ctx.translate(-200, -200);
+        this.ctx.translate(x, y);
+        renderHitbox(shape2, "#88ff0088", true);
+        this.ctx.translate(-x, -y);
+        renderLoop();
+    });
+}
+function renderHitbox(hitbox, color, fill=false) {
+    this.ctx.beginPath();
+    if (hitbox.t === "r") {
+        this.ctx.rect(hitbox.x-hitbox.w/2, hitbox.y-hitbox.h/2, hitbox.w, hitbox.h);
+    } else if (hitbox.t === "c") {
+        this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, 0, 2*Math.PI);
+    } else if (hitbox.t === "v") {
+        this.ctx.moveTo(hitbox.x, hitbox.y);
+        this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, hitbox.s*Math.PI/180, hitbox.e*Math.PI/180);
+        this.ctx.lineTo(hitbox.x, hitbox.y);
+    }
+    if (fill) {
+        this.ctx.fillStyle = color;
+        this.ctx.fill();
+    } else {
+        this.ctx.strokeStyle = color;
+        this.ctx.lineWidth = 8;
+        this.ctx.stroke();
+    }
+}
+        </script>
+    </body>
+</html>

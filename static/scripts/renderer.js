@@ -250,7 +250,7 @@ class SmashmemeRenderer {
             this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, 0, 2*Math.PI);
         } else if (hitbox.t === "v") {
             this.ctx.moveTo(hitbox.x, hitbox.y);
-            this.ctx.arc(hitbox.x-hitbox.w/2, hitbox.y-hitbox.h/2, hitbox.r, hitbox.s*Math.PI/180, hitbox.e*Math.PI/180);
+            this.ctx.arc(hitbox.x, hitbox.y, hitbox.r, hitbox.s*Math.PI/180, hitbox.e*Math.PI/180);
             this.ctx.lineTo(hitbox.x, hitbox.y);
         }
         if (fill) {
