@@ -5,8 +5,10 @@ class SmashmemeRenderer {
         this.models = {};
         Loader.loadModelFromJSONFile("no").then(model => this.models.no=model);
         Loader.loadModelFromJSONFile("loading").then(model => this.models.loading=model);
-        this.camera = {zoom:1/2, zooms:[], pos:{x:0, y:0}};
+        this.camera = {zoom:1/2, pos:{x:0, y:0}, fluidity:0.8};
         this.renderRequestId = -1;
+        this.renderTime = 0;
+        this.lastRenderedUpdateTime = 0;
     }
 
     setCanvas(canvas) {
@@ -23,7 +25,9 @@ class SmashmemeRenderer {
     start(client) {
         this.stop();
         this.renderRequestId = requestAnimationFrame(() => {
+            var t = Date.now();
             this.renderClient(client);
+            this.renderTime = Date.now() - t;
             this.start(client);
         });
     }
@@ -47,12 +51,9 @@ class SmashmemeRenderer {
             if (smasher.pos.y < minY) minY = smasher.pos.y;
             if (smasher.pos.y > maxY) maxY = smasher.pos.y;
         }
-        this.camera.pos.x = (minX+maxX)/2;
-        this.camera.pos.y = (minY+maxY)/2 - 50;
-        //this.camera.zooms.push(1/(1+Math.sqrt(Math.pow(maxX-minX, 2)+Math.pow(maxY-minY, 2))/2000));
-        this.camera.zooms.push(Math.min(1,600/Math.sqrt(Math.pow(maxX-minX, 2)+Math.pow(maxY-minY, 2))));
-        if (this.camera.zooms.length > 10) this.camera.zooms.shift();
-        this.camera.zoom = (this.camera.zooms[0]+this.camera.zooms[this.camera.zooms.length-1])/2;
+        this.camera.pos.x = (minX+maxX)/2*(1-this.camera.fluidity) + this.camera.pos.x*this.camera.fluidity
+        this.camera.pos.y = ((minY+maxY)/2-50)*(1-this.camera.fluidity) + this.camera.pos.y*this.camera.fluidity;
+        this.camera.zoom = Math.min(1,600/Math.sqrt(Math.pow(maxX-minX, 2)+Math.pow(maxY-minY, 2)))*(1-this.camera.fluidity) + this.camera.zoom*this.camera.fluidity;
     }
     // Affichage d'un client (menu ou jeu)
     renderClient(client) {
@@ -104,7 +105,10 @@ class SmashmemeRenderer {
         this.ctx.translate(-this.cvs.width/2, -this.cvs.height/2);
     }
     renderPlayingGame(game) {
-        this.updateCamera(game);
+        if (game.lastUpdateTime > this.lastRenderedUpdateTime) {
+            this.updateCamera(game);
+            this.lastRenderedUpdateTime = game.lastUpdateTime;
+        }
         this.renderWorld(game.world, game.debug);
     }
     renderChoosingGame(game) {

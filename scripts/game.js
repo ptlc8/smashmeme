@@ -13,6 +13,7 @@ class Game {
         this.debug = false;
         this.stateStartTime = Date.now();
         this.updateIntervalId = null;
+        this.lastUpdateTime = 0;
     }
     get isPlaying() {
         return this.world !== null;
@@ -126,6 +127,7 @@ class Game {
                 this.updatePlayingGame();
                 break;
         }
+        this.lastUpdateTime = Date.now();
     }
     updateChoosingGame() {
         
