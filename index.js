@@ -4,7 +4,7 @@ const SmashmemeServer = require("./server");
 
 // Create HTTP server
 const app = express();
-const port = 13028;
+const port = process.env.PORT || 13028;
 
 var publicDirectories = ["models", "maps", "smashers", "scripts"];
 for (let publicDirectory of publicDirectories) {
