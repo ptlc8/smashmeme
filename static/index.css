@@ -1,0 +1,167 @@
+body {
+    background-color: #110011;
+    background-color: #36393f;
+    background-color: #191919;
+    font-family: Helvetica, Arial, sans-serif;
+    color: whitesmoke;
+    margin: 0;
+}
+.minus {
+    font-size: .5em;
+}
+h1 {
+    display: block;
+    font-size: 2em;
+    margin: .5rem 2rem;
+}
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin: .5rem 4rem;
+}
+
+#maps {
+    height: 60vh;
+    display: flex;
+    flex-direction: row;
+}
+#maps article {
+    flex: 4;
+    background-size: cover;
+    background-position: center;
+    transition: flex .5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#maps article:hover {
+    flex: 5;
+}
+#maps p {
+    text-align: center;
+    font-size: 1.75em;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    max-width: 16em;
+}
+#maps button {
+    font-size: 1.25em;
+    border-radius: .5rem;
+    padding: .5rem 1rem;
+    border: 0;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+#maps button:hover {
+    background-color: #bbb;
+}
+
+#smashers {
+    display: flex;
+    flex-wrap: wrap;
+}
+#smashers article {
+    flex: 1 1 20rem;
+    background-color: #999;
+    color: #000;
+    margin: 1rem;
+    padding: 1rem;
+    vertical-align: top;
+    clear: both;
+}
+#smashers > article .title {
+    font-size: 1.25em;
+    margin: 16px 8px;
+}
+#smashers > article .description {
+    text-align: justify;
+    margin: .5em;
+}
+#smashers > article .description::first-letter {
+    margin-left: 24px;
+}
+#smashers > article img, #smashers > article canvas {
+    width: 8rem;
+    height: 8rem;
+    padding: 0 .5em;
+}
+#smashers > article:nth-child(2n+1) img, #smashers > article:nth-child(2n+1) canvas {
+    float: left;
+}
+#smashers > article:nth-child(2n) img, #smashers > article:nth-child(2n) canvas {
+    float: right;
+}
+
+footer {
+    background-color: #401040;
+    background-color: #202225;
+    text-align: center;
+    padding: .5em;
+    clear: both;
+}
+
+/* portrait version */
+@media (orientation: portrait) {
+    #maps {
+        flex-direction: column;
+    }
+    h1 {
+        margin: .5rem;
+    }
+}
+
+/* text effects */
+.rainbow {
+    animation: rainbow-color 5s linear infinite;
+}
+@keyframes rainbow-color {
+    0% {
+        color: #f00;
+    }
+    16.666% {
+        color: #ff0;
+    }
+    33.333% {
+        color: #0f0;
+    }
+    50% {
+        color: #0ff;
+    }
+    66.666% {
+        color: #00f;
+    }
+    83.333% {
+        color: #f0f;
+    }
+    100% {
+        color: #f00;
+    }
+}
+.glitch { /* https://codepen.io/cbanlawi/pen/xxRBeMY */
+    animation: glitch 750ms infinite;
+}
+@keyframes glitch {
+    0% {
+        text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00;
+    }
+    15% {
+        text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00;
+    }
+    16% {
+        text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff, -0.05em -0.05em 0 #fffc00;
+    }
+    49% {
+        text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff, -0.05em -0.05em 0 #fffc00;
+    }
+    50% {
+        text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff, 0 -0.04em 0 #fffc00;
+    }
+    99% {
+        text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff, 0 -0.04em 0 #fffc00;
+    }
+    100% {
+        text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff, -0.04em -0.025em 0 #fffc00;
+    }
+}

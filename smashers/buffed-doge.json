@@ -1,5 +1,6 @@
 {
     "name": "Buffed doge",
+    "description": "A doge that is buffed",
     "model": "buffed-doge",
     "down": 3,
     "jumpsLimit": 2,

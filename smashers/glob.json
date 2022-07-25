@@ -1,5 +1,6 @@
 {
     "name": "Globglogabgalab",
+    "description": "",
     "model": "glob",
     "down": 3,
     "jumpsLimit": 2,

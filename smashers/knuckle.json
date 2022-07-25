@@ -1,5 +1,6 @@
 {
     "name": "Ugandan Knuckle",
+    "description": "A knuckle of the Uganda people, used as a weapon.",
     "model": "knuckle",
     "down": 3,
     "jumpsLimit": 3,
