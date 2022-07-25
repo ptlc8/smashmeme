@@ -13,12 +13,12 @@ class SmashmemeRenderer {
 
     setCanvas(canvas, alpha=false) {
         this.cvs = canvas;
-        this.cvs.width = parseInt(getComputedStyle(this.cvs).width);
-        this.cvs.height = parseInt(getComputedStyle(this.cvs).height);
+        this.cvs.width = parseInt(getComputedStyle(this.cvs).width)*window.devicePixelRatio;
+        this.cvs.height = parseInt(getComputedStyle(this.cvs).height)*window.devicePixelRatio;
         this.ctx = canvas.getContext("2d", { alpha });
         window.addEventListener("resize", (e) => {
-            this.cvs.width = parseInt(getComputedStyle(this.cvs).width);
-            this.cvs.height = parseInt(getComputedStyle(this.cvs).height);
+            this.cvs.width = parseInt(getComputedStyle(this.cvs).width)*window.devicePixelRatio;
+            this.cvs.height = parseInt(getComputedStyle(this.cvs).height)*window.devicePixelRatio;
         });
     }
 

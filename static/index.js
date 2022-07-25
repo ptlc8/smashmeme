@@ -17,9 +17,12 @@ Smashmeme.load().then(() => {
             if (ctx.resetTransform) ctx.resetTransform();
             ctx.clearRect(0, 0, cvs[i].width, cvs[i].height);
             var zoom = Math.min(cvs[i].height / 250, cvs[i].width / 250);
-            ctx.translate(cvs[i].width/2, cvs[i].height/2-Smashmeme.smashers[cvs[i].dataset.smasher].hitbox.y/2);
+            var hitbox = Smashmeme.smashers[cvs[i].dataset.smasher].hitbox;
+            ctx.translate(cvs[i].width/2, cvs[i].height/2);
             ctx.scale(zoom, zoom);
+            ctx.translate(-hitbox.x, -hitbox.y);
             renderers[i].renderModel(renderers[i].getModel(cvs[i].dataset.smasher), time, "idle");
+            ctx.translate(hitbox.x, hitbox.y);
             ctx.scale(1/zoom, 1/zoom);
             ctx.translate(-cvs[i].width/2, -cvs[i].height);
         }
