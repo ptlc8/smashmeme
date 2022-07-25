@@ -1,6 +1,6 @@
 class SmashmemeRenderer {
-    constructor(canvas) {
-        this.setCanvas(canvas);
+    constructor(canvas, alpha=false) {
+        this.setCanvas(canvas, alpha);
         this.images = {no: SmashmemeRenderer.createImage("assets/no.png"), loading: SmashmemeRenderer.createImage("assets/loading.png")};
         this.models = {};
         Loader.loadModelFromJSONFile("no").then(model => this.models.no=model);
@@ -11,11 +11,11 @@ class SmashmemeRenderer {
         this.lastRenderedUpdateTime = 0;
     }
 
-    setCanvas(canvas) {
+    setCanvas(canvas, alpha=false) {
         this.cvs = canvas;
         this.cvs.width = parseInt(getComputedStyle(this.cvs).width);
         this.cvs.height = parseInt(getComputedStyle(this.cvs).height);
-        this.ctx = canvas.getContext("2d", { alpha: false });
+        this.ctx = canvas.getContext("2d", { alpha });
         window.addEventListener("resize", (e) => {
             this.cvs.width = parseInt(getComputedStyle(this.cvs).width);
             this.cvs.height = parseInt(getComputedStyle(this.cvs).height);
