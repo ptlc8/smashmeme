@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>You're lost - Super Smash Meme</title>
+        <style>
+            body {
+                background-color: #054479;
+                background-image: url('assets/nyan-cat-space.jpg');
+                font-family: Arial;
+                animation: background-lost 10s ease-in-out infinite;
+            }
+            main {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                width: fit-content;
+                background: whitesmoke;
+                padding: 1em;
+                border-radius: .5em;
+            }
+            @keyframes background-lost {
+                0% { background-position: 0px 0px; }
+                20% { background-position: 100px 20px; }
+                40% { background-position: 20px -80px; }
+                60% { background-position: -60px -30px; }
+                80% { background-position: -40 80px; }
+                100% { background-position: 0px 0px; }
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1 class="title">
+                You're Nyan cat: you're lost in space
+            </h1>
+            <h2 class="subtitle">
+                The page you're looking for doesn't exist.
+            </h2>
+            <div class="content">
+                <p>
+                    You've probably made a mistake in the URL.
+                </p>
+                <p>
+                    You can try going back to the <a href="/">home page</a>.
+                </p>
+            </div>
+        </main>
+    </body>
+</html>

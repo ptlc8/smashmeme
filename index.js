@@ -20,7 +20,7 @@ app.get(`/*`, (req, res, next) => {
     res.sendFile(__dirname + "/static/" + req.params[0], {}, function (err) {
         if (err) {
             res.status(404);
-            res.send("Not found");
+            res.sendFile(__dirname + "/errors/404.html");
         }
     });
 });
