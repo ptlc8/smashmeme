@@ -9,11 +9,12 @@ class RemoteGame extends Game {
         this.selfId = selfId;
         this.send = sendFunction;
         this.worldSaves = [];
+        this.selectingSmasher = {};
     }
     onReceive(data) {
         switch (data.type) {
             case "join":
-                return super.join(data.player);
+                return super.join(data.player) && !(this.selectingSmasher[player.id] = 0);
             case "leave":
                 return super.leave(data.playerId);
             case "choose":
@@ -24,7 +25,7 @@ class RemoteGame extends Game {
                 return super.start();
             case "inputs":
                 super.onInput(data.playerId, data.input, data.value, data.tick);
-                if (data.tick < this.world.tick)
+                if (this.world && data.tick < this.world.tick)
                     this.rollback(data.tick);
                 break;
             default:
@@ -55,8 +56,7 @@ class RemoteGame extends Game {
     }
     // Override
     onInput(_playerId, input, value, _tick) {
-        var tick = this.world.tick;
-        //this.localInputs[tick] = JSON.parse(JSON.stringify(inputs)); // TODO : find better way to copy
+        var tick = this.world ? this.world.tick : 0;
         this.send({ type: "inputs", input, value, tick });
         return true;
     }

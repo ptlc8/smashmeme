@@ -45,7 +45,12 @@ wsServer.on('connection', socket => {
     smashmemeServer.onConnection(socket.id);
     socket.on('message', (data, isBinary) => {
         var message = isBinary ? data : data.toString();
-        smashmemeServer.onReceive(socket.id, JSON.parse(message));
+        try {
+            message = JSON.parse(message);
+        } catch (e) {
+            return;
+        }
+        smashmemeServer.onReceive(socket.id, message);
     });
     socket.on('close', () => {
         smashmemeServer.onDisconnection(socket.id);
