@@ -1,9 +1,11 @@
 const express = require("express");
 const ws = require("ws");
+const compression = require("compression");
 const SmashmemeServer = require("./server");
 
 // Create HTTP server
 const app = express();
+app.use(compression());
 const port = process.env.PORT || 13028;
 
 var publicDirectories = ["models", "maps", "smashers", "scripts"];
