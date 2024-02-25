@@ -4,8 +4,11 @@
   "description": "- Jeu style SmashBros - Graphisme 2D - Animations fluides",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "here": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop smashmeme ecosystem.config.js",
+    "restart": "pm2 restart ecosystem.config.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +21,7 @@
   "homepage": "https://github.com/ptlc8/smashmeme#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "pm2": "^5.3.1",
     "ws": "^8.8.0"
   }
 }
