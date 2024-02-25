@@ -6,7 +6,8 @@ window.addEventListener("load", e => {
     client = new SmashmemeClient();
     client.load().then(() => {
         var renderer = new SmashmemeRenderer(document.getElementById("aff"));
-        var websocket = new WebSocket((location.protocol=="https:"?"wss:":"ws:")+"//"+location.host);
+        var path = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1)
+        var websocket = new WebSocket((location.protocol == "https:" ? "wss:" : "ws:") + "//" + location.host + path);
         websocket.onopen = () => {
             client.startRemote((data) => websocket.send(JSON.stringify(data)));
             websocket.onmessage = (message) => client.onReceive(JSON.parse(message.data));

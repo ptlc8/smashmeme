@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteCond %{HTTP:Upgrade} websocket [NC]
+RewriteCond %{HTTP:Connection} Upgrade [NC]
+RewriteRule (.*) ws://localhost:13028/$1 [P,L]
+
+RewriteRule (.*) http://localhost:13028/$1 [P,L]
