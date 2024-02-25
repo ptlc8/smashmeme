@@ -1,5 +1,6 @@
 {
     "name": "Raptor Jésus",
+    "description": "A divine dinosaur with majestic feathers and a holy roar, spreading prehistoric salvation.",
     "model": "raptor",
     "down": 3,
     "jumpsLimit": 3,

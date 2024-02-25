@@ -1,5 +1,6 @@
 {
     "name": "Coffin dancers",
+    "description": "Swaggering undertakers with dance moves so infectious, even the afterlife can't resist grooving to their rhythm.",
     "model": "coffin-dancers",
     "jumpsLimit": 2,
     "down": 5,

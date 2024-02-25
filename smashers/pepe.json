@@ -1,5 +1,6 @@
 {
     "name": "Pepe",
+    "description": "A versatile amphibian artist, donning various emotions and expressions, transcending memes to become a symbol of online culture.",
     "model": "pepe",
     "jumpsLimit": 2,
     "down": 5,

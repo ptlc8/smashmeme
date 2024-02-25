@@ -1,6 +1,6 @@
 {
     "name": "Bongo cat",
-    "description": "Bongo Cat is an adorable cat with pointed ears, a pleasant smile, and little pink paws that pat on whatever instrument.",
+    "description": "An adorable cat with pointed ears, a pleasant smile, and little pink paws that pat on whatever instrument.",
     "model": "bongo-cat",
     "down": 3,
     "jumpsLimit": 4,
