@@ -4,12 +4,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'npm ci'
+                sh 'docker compose build'
             }
         }
-        stage('Restart') {
+        stage('Deploy') {
             steps {
-                sh 'npm run restart'
+                sh 'docker compose up -d'
             }
         }
     }

@@ -4,11 +4,11 @@
   "description": "- Jeu style SmashBros - Graphisme 2D - Animations fluides",
   "main": "index.js",
   "scripts": {
-    "here": "node .",
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start ecosystem.config.js",
-    "stop": "pm2 stop smashmeme ecosystem.config.js",
-    "restart": "pm2 restart ecosystem.config.js"
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop smashmeme ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js"
   },
   "repository": {
     "type": "git",
