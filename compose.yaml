@@ -4,3 +4,6 @@ services:
     ports:
       - 13028:13028
     restart: always
+    labels:
+      - webproxy.path=sm
+      - webproxy.websockets=true
