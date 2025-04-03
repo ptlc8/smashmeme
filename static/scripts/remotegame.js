@@ -14,7 +14,7 @@ class RemoteGame extends Game {
     onReceive(data) {
         switch (data.type) {
             case "join":
-                return super.join(data.player) && !(this.selectingSmasher[player.id] = 0);
+                return super.join(data.player) && !(this.selectingSmasher[data.player.id] = 0);
             case "leave":
                 return super.leave(data.playerId);
             case "choose":

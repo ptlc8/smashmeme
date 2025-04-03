@@ -11,7 +11,7 @@ var Collision = function(){
 		return vector;
 	};
 	var has = function(pos1, shape1, pos2, shape2) { // degrees
-		    
+		
 		if (!shape1 || !shape2 || !shape1.t || !shape2.t) return false;
 
 		// alphabetic order of type
@@ -48,9 +48,9 @@ var Collision = function(){
 		if (shape1.t == "c" && shape2.t == "r") {
 			var dx = Math.abs(x1-x2), dy = Math.abs(y1-y2);
 			if (dx > shape2.w/2+shape1.r || dy > shape2.h/2+shape1.r)
-			 	return false;
+				return false;
 			if (dx <= shape2.w/2 || dy <= shape2.h/2)
-			 	return true;
+				return true;
 			return vectorLength({x:dx-shape2.w/2, y:dy-shape2.h/2}) <= shape1.r;
 		}
 
@@ -64,4 +64,4 @@ var Collision = function(){
 }();
 
 if (typeof exports==="object"&&typeof module!=="undefined")
-    module.exports = Collision;
+	module.exports = Collision;

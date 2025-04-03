@@ -39,7 +39,7 @@ function getAnimNames(model) {
 		for (let animName of Object.keys(model.anims)) for (let subAnimName of animName.split("|"))
 			if (!animNames.includes(subAnimName)) animNames.push(subAnimName);
 	for (let pinned of model.pinneds)
-		for (animName of getAnimNames(pinned))
+		for (let animName of getAnimNames(pinned))
 			if (!animNames.includes(animName)) animNames.push(animName);
 	return animNames;
 }

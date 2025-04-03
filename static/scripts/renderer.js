@@ -224,7 +224,7 @@ class SmashmemeRenderer {
                     let stepsN = (anim.steps.length-1);
                     a[anim.on] = anim.steps[step]+EasingFunctions[anim.func](t%(anim.in/stepsN)/(anim.in/stepsN))*(anim.steps[step+1]-anim.steps[step]);
                 }
-        if (options.miror) ctx.scale(-1, 1);
+        if (options.miror) this.ctx.scale(-1, 1);
         if (model.scale.x*(a.scaleX||1) !== 0 && model.scale.y*(a.scaleY||1) !== 0) {
             this.ctx.translate(model.pos.x+(a.posX||0), model.pos.y+(a.posY||0));
             this.ctx.rotate((model.rot+(a.rot||0))*Math.PI/180);
@@ -278,7 +278,7 @@ class SmashmemeRenderer {
             return this.images[src].complete || ignoreLoading ? this.images[src] : this.images.loading;
         var img = new Image();
         img.onerror = () => {
-            this.images[src] = images.no;
+            this.images[src] = this.images.no;
             console.error("Can't load image : " + src);
         }
         img.onload = () => {
@@ -313,7 +313,7 @@ class SmashmemeRenderer {
         //model.pinneds = data.pinneds || [];
         model.pinneds = [];
         if (data.pinneds) for (let pinned of data.pinneds)
-            model.pinneds.push(newModel(pinned));
+            model.pinneds.push(SmashmemeRenderer.newModel(pinned));
         model.trsp = data.trsp || 0;
         model.bh = data.bh || false;
         return model;

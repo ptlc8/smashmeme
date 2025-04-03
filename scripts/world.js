@@ -25,7 +25,7 @@ class World {
             clone.entities.push(clone.smashers[playerId] = this.smashers[playerId].clone());
         }
         for (let i = clone.entities; i < this.entities.length; i++) {
-            clone.entities.push(entities[i].clone());
+            clone.entities.push(this.entities[i].clone());
         }
         clone.playerInputs = {};
         for (let playerId in this.playerInputs) {
